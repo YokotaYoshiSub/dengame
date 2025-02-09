@@ -610,7 +610,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   remaingoals: 1
-  stageNumber: 39
+  stageNumber: 38
   isClear: 0
   clearText: {fileID: 1037489928}
   clearImage: {fileID: 737160395}
