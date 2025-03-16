@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
 
     public static string gameState = "playing";//ゲームの状態
 
+    public int score = 0;//スコア
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,14 +56,14 @@ public class PlayerController : MonoBehaviour
         if (axisH > 0.0f)
         {
             //右移動
-            Debug.Log("右移動");
+            //Debug.Log("右移動");
             //オブジェクトの形はそのまま
             transform.localScale = new Vector2(1,1);
         }
         else if (axisH < 0.0f)
         {
             //左移動
-            Debug.Log("左移動");
+            //Debug.Log("左移動");
             //左右反転
             transform.localScale = new Vector2(-1,1);
         }
@@ -91,7 +93,7 @@ public class PlayerController : MonoBehaviour
         0.0f, //発射距離
         groundLayer);//検出するレイヤー
 
-        if (onGround){Debug.Log("接地");}
+        //if (onGround){Debug.Log("接地");}
 
         if (onGround || axisH != 0)
         {
@@ -149,6 +151,16 @@ public class PlayerController : MonoBehaviour
         else if(collision.gameObject.tag == "Dead")
         {
             GameOver();//ゲームオーバー
+        }
+        else if(collision.gameObject.tag == "ScoreItem")
+        {
+            //スコアアイテム
+            //ItemDataを取得
+            Itemdata item = collision.GetComponent<Itemdata>();
+            //スコアを得る
+            score = item.value;
+            //アイテムを削除
+            Destroy(collision.gameObject);
         }
     }
 
