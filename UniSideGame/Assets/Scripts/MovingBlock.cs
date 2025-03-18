@@ -37,7 +37,7 @@ public class MovingBlock : MonoBehaviour
             float ds = distance / times;//1秒の移動距離
             float df = ds * Time.deltaTime;//1fの移動距離
             movep += df/distance;//0~1でどれくらい移動したかを示す
-            Debug.Log(movep);
+            //Debug.Log(movep);
             if (isReverse)
             {
                 transform.position = Vector2.Lerp(endPos,startPos,movep);//逆移動
