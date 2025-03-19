@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class player2Controller : MonoBehaviour
 {    
+    //移動
     private Rigidbody2D rb2d;
     float speed = 5.0f; 
     float resetgap = 0.9f;
@@ -25,7 +26,7 @@ public class player2Controller : MonoBehaviour
 
     void Update()
     {       
-        
+        //上下左右の入力があった時に、それぞれ移動状態のフラグを立てる
         if (Input.GetKey(KeyCode.UpArrow)&&!DownMoving&&!RightMoving&&!LeftMoving)
         {
             UpMoving = true;
@@ -42,6 +43,8 @@ public class player2Controller : MonoBehaviour
         {
             LeftMoving = true;         
         }
+
+        //上下左右の入力が終わった時、格子点までキャラクターを運ぶコルーチン開始
         if (Input.GetKeyUp(KeyCode.UpArrow)&&!DownMoving&&!RightMoving&&!LeftMoving)
         {
             StartCoroutine(Up());          
@@ -62,6 +65,7 @@ public class player2Controller : MonoBehaviour
 
     void FixedUpdate()
     {
+        //移動フラグが立っているとき、移動させる
         if (UpMoving&&!DownMoving&&!RightMoving&&!LeftMoving)
         {
             Vector2 position = rb2d.position;
@@ -88,6 +92,7 @@ public class player2Controller : MonoBehaviour
         }        
     }
     
+    //上下左右の入力終了後の自動運転
     private IEnumerator Up()
     {
         while(DownMoving||RightMoving||LeftMoving)
