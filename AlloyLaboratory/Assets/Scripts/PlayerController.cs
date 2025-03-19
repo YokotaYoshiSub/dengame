@@ -26,6 +26,16 @@ public class player2Controller : MonoBehaviour
 
     void Update()
     {       
+        //ダッシュ状態
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            speed = 10.0f;
+        }
+        //ダッシュ解除
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            speed = 5.0f;
+        }
         //上下左右の入力があった時に、それぞれ移動状態のフラグを立てる
         if (Input.GetKey(KeyCode.UpArrow)&&!DownMoving&&!RightMoving&&!LeftMoving)
         {
@@ -68,24 +78,28 @@ public class player2Controller : MonoBehaviour
         //移動フラグが立っているとき、移動させる
         if (UpMoving&&!DownMoving&&!RightMoving&&!LeftMoving)
         {
+            //上方向
             Vector2 position = rb2d.position;
             position.y += speed * Time.deltaTime;
             rb2d.MovePosition(position);            
         }
         if (!UpMoving&&DownMoving&&!RightMoving&&!LeftMoving)
         {
+            //下方向
             Vector2 position = rb2d.position;
             position.y -= speed * Time.deltaTime;
             rb2d.MovePosition(position);            
         }
         if (!UpMoving&&!DownMoving&&RightMoving&&!LeftMoving)
         {
+            //右方向
             Vector2 position = rb2d.position;
             position.x += speed * Time.deltaTime;
             rb2d.MovePosition(position);            
         }
         if (!UpMoving&&!DownMoving&&!RightMoving&&LeftMoving)
         {
+            //左方向
             Vector2 position = rb2d.position;
             position.x -= speed * Time.deltaTime;
             rb2d.MovePosition(position);            
@@ -93,6 +107,35 @@ public class player2Controller : MonoBehaviour
     }
     
     //上下左右の入力終了後の自動運転
+    private IEnumerator Move()
+    {
+        while(DownMoving||RightMoving||LeftMoving)
+        {
+            yield return null;
+        }
+        float gap = Mathf.Ceil(transform.position.y)-transform.position.y;
+        if (gap <= resetgap)
+        {
+            targetPosition = new Vector3 (transform.position.x, Mathf.Ceil(transform.position.y), transform.position.z);
+            estimateTime = gap/speed;
+        }
+        else
+        {
+            targetPosition = new Vector3 (transform.position.x, Mathf.Floor(transform.position.y), transform.position.z);
+            estimateTime = 0f;
+        }
+        
+        float elapsedTime = 0f;
+        while(estimateTime > elapsedTime)
+        {
+            elapsedTime += Time.deltaTime;
+            transform.position += new Vector3 (0f,5f,0f)*Time.deltaTime;
+            yield return null;
+        }
+        UpMoving = false;
+        rb2d.linearVelocity = Vector2.zero;
+        transform.position = new Vector3(Mathf.Round(targetPosition.x),Mathf.Round(targetPosition.y),Mathf.Round(targetPosition.z));
+    }
     private IEnumerator Up()
     {
         while(DownMoving||RightMoving||LeftMoving)
