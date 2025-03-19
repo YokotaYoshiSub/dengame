@@ -24,6 +24,13 @@ public class GameManager : MonoBehaviour
     public static int totalScore;//合計スコア
     public int stageScore = 0;//ステージスコア
 
+    //--------------サウンド再生追加----------------
+    public AudioClip meGameOver;//ゲームオーバー
+    public AudioClip meGameClear;//ゲームクリア
+
+    //--------------プレイヤー操作-----------------
+    public GameObject inputUI;//操作UIパネル
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -52,7 +59,8 @@ public class GameManager : MonoBehaviour
     {
         if (PlayerController.gameState == "gameclear")
         {
-            //ゲームクリア
+            //----------------ゲームクリア-------------------------
+
             mainImage.SetActive(true);//画像を表示
             panel.SetActive(true);//ボタンを表示
             //RESTARTボタンを無効化
@@ -76,10 +84,24 @@ public class GameManager : MonoBehaviour
             totalScore += stageScore;
             stageScore = 0;
             UpdateScore();//スコア更新
+
+            //-----------サウンド再生追加-------------------
+            //サウンド追加
+            AudioSource soundPlayer = GetComponent<AudioSource>();
+            if (soundPlayer != null)
+            {
+                //BGM停止
+                soundPlayer.Stop();
+                soundPlayer.PlayOneShot(meGameClear);
+            }
+
+            //--------------プレイヤー操作----------------
+            inputUI.SetActive(false);//操作UIを隠す
         }
         else if (PlayerController.gameState == "gameover")
         {
-            //ゲームオーバー
+            //-----------------ゲームオーバー----------------------
+
             mainImage.SetActive(true);//画像を表示
             panel.SetActive(true);//ボタンを表示
             //NEXTボタンを無効化
@@ -93,11 +115,25 @@ public class GameManager : MonoBehaviour
             {
                 timeCnt.isTimeOver = true; //時間カウント停止
             }
+
+            //-------------サウンド再生追加---------------
+            //サウンド再生
+            AudioSource soundPlayer = GetComponent<AudioSource>();
+            if (soundPlayer != null)
+            {
+                //BGM停止
+                soundPlayer.Stop();
+                soundPlayer.PlayOneShot(meGameOver);
+            }
+
+            //-------------------プレイヤー操作----------------------
+            inputUI.SetActive(false);//操作UI隠す
         }
         else if (PlayerController.gameState == "playing")
         {
             //Debug.Log("プレイ中");
-            //ゲームプレイ中
+            //-------------------ゲームプレイ中--------------------
+
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             //PlayerControllerを取得する
             PlayerController playerCnt = player.GetComponent<PlayerController>();
@@ -144,5 +180,14 @@ public class GameManager : MonoBehaviour
     {
         int score = stageScore + totalScore;
         scoreText.GetComponent<Text>().text = score.ToString();
+    }
+
+    //---------------プレイヤー操作----------------------
+    //ジャンプ
+    public void Jump()
+    {
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        PlayerController playerCnt = player.GetComponent<PlayerController>();
+        playerCnt.Jump();
     }
 }
