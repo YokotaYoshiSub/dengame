@@ -2,18 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class player2Controller : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {    
     //移動
     private Rigidbody2D rb2d;
-    float speed = 5.0f; 
-    float resetgap = 0.9f;
-    float estimateTime = 0f;
-    bool UpMoving = false;
-    bool DownMoving = false;
-    bool RightMoving = false;
-    bool LeftMoving = false;
-    Vector3 targetPosition = Vector3.zero;
+    public float speed = 5.0f; 
+    float axisH = 0.0f;
+    float axisV = 0.0f;
+    float preAxisH = 0.0f;
+    float preAxisV = 0.0f;
+    float Distance = 0.0f;
+
+    bool isMoving = false;//移動中かどうか
+
     
 
     // Start is called before the first frame update
@@ -26,6 +27,8 @@ public class player2Controller : MonoBehaviour
 
     void Update()
     {       
+        //Debug.Log(new Vector2(axisH, axisV));
+        
         //ダッシュ状態
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
@@ -36,220 +39,83 @@ public class player2Controller : MonoBehaviour
         {
             speed = 5.0f;
         }
-        //上下左右の入力があった時に、それぞれ移動状態のフラグを立てる
-        if (Input.GetKey(KeyCode.UpArrow)&&!DownMoving&&!RightMoving&&!LeftMoving)
+
+        //ベクトル(axisH, axisV)は(0,0),(+-1,0),(0,+-1)のいずれかである
+        if (axisV == 0)
         {
-            UpMoving = true;
+            axisH = Input.GetAxisRaw("Horizontal");
         }
-        if (Input.GetKey(KeyCode.DownArrow)&&!UpMoving&&!RightMoving&&!LeftMoving)
+        if (axisH == 0)
         {
-            DownMoving = true;           
-        }
-        if (Input.GetKey(KeyCode.RightArrow)&&!DownMoving&&!UpMoving&&!LeftMoving)
-        {
-            RightMoving = true;      
-        }
-        if (Input.GetKey(KeyCode.LeftArrow)&&!DownMoving&&!RightMoving&&!UpMoving)
-        {
-            LeftMoving = true;         
+            axisV = Input.GetAxisRaw("Vertical");
         }
 
-        //上下左右の入力が終わった時、格子点までキャラクターを運ぶコルーチン開始
-        if (Input.GetKeyUp(KeyCode.UpArrow)&&!DownMoving&&!RightMoving&&!LeftMoving)
+        //入力が変更されたらコルーチン開始
+        if (preAxisH != axisH)
         {
-            StartCoroutine(Up());          
+            StartCoroutine(Move(preAxisH, 0.0f));
         }
-        if (Input.GetKeyUp(KeyCode.DownArrow)&&!UpMoving&&!RightMoving&&!LeftMoving)
+        if (preAxisV != axisV)
         {
-            StartCoroutine(Down());        
+            StartCoroutine(Move(0.0f, preAxisV));
         }
-        if (Input.GetKeyUp(KeyCode.RightArrow)&&!DownMoving&&!UpMoving&&!LeftMoving)
+
+        if (axisH != 0)
         {
-            StartCoroutine(Right());        
+            //左右入力時
+            
+            preAxisH = axisH;
+            preAxisV = 0.0f;//左右の入力があったことを保存            
         }
-        if (Input.GetKeyUp(KeyCode.LeftArrow)&&!DownMoving&&!RightMoving&&!UpMoving)
+        if (axisV != 0)
         {
-            StartCoroutine(Left());           
-        }          
+            //上下入力時
+            preAxisH = 0.0f;
+            preAxisV = axisV;//上下の入力があったことを保存
+        }
+
     }
 
     void FixedUpdate()
     {
-        //移動フラグが立っているとき、移動させる
-        if (UpMoving&&!DownMoving&&!RightMoving&&!LeftMoving)
+        if (!isMoving)
         {
-            //上方向
-            Vector2 position = rb2d.position;
-            position.y += speed * Time.deltaTime;
-            rb2d.MovePosition(position);            
+            //動いていない状態なら
+            //速度を更新
+            rb2d.linearVelocity = new Vector2(speed*axisH, speed*axisV);
+            isMoving = true;
         }
-        if (!UpMoving&&DownMoving&&!RightMoving&&!LeftMoving)
-        {
-            //下方向
-            Vector2 position = rb2d.position;
-            position.y -= speed * Time.deltaTime;
-            rb2d.MovePosition(position);            
-        }
-        if (!UpMoving&&!DownMoving&&RightMoving&&!LeftMoving)
-        {
-            //右方向
-            Vector2 position = rb2d.position;
-            position.x += speed * Time.deltaTime;
-            rb2d.MovePosition(position);            
-        }
-        if (!UpMoving&&!DownMoving&&!RightMoving&&LeftMoving)
-        {
-            //左方向
-            Vector2 position = rb2d.position;
-            position.x -= speed * Time.deltaTime;
-            rb2d.MovePosition(position);            
-        }        
     }
     
     //上下左右の入力終了後の自動運転
-    private IEnumerator Move()
+    private IEnumerator Move(float x, float y)
     {
-        while(DownMoving||RightMoving||LeftMoving)
+        //格子点までの距離を計測
+        if (x > 0.5f)
         {
-            yield return null;
+            Distance = Mathf.Ceil(transform.position.x)-transform.position.x;
         }
-        float gap = Mathf.Ceil(transform.position.y)-transform.position.y;
-        if (gap <= resetgap)
+        else if (x < -0.5f)
         {
-            targetPosition = new Vector3 (transform.position.x, Mathf.Ceil(transform.position.y), transform.position.z);
-            estimateTime = gap/speed;
+            Distance = transform.position.x - Mathf.Floor(transform.position.x);
         }
-        else
+        else if (y > 0.5f)
         {
-            targetPosition = new Vector3 (transform.position.x, Mathf.Floor(transform.position.y), transform.position.z);
-            estimateTime = 0f;
+            Distance = Mathf.Ceil(transform.position.y)-transform.position.y;
         }
-        
-        float elapsedTime = 0f;
-        while(estimateTime > elapsedTime)
+        else if (y < -0.5f)
         {
-            elapsedTime += Time.deltaTime;
-            transform.position += new Vector3 (0f,5f,0f)*Time.deltaTime;
-            yield return null;
+            Distance = transform.position.y - Mathf.Floor(transform.position.y);
         }
-        UpMoving = false;
+        //格子点にいたるまでの時間
+        float time = Distance / speed;
+        //格子点にいたるまで待つ
+        yield return new WaitForSeconds(time);
+        //格子点についたら座標を整数値にし、速度を0にし、動いていない状態にする
+        transform.position = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
         rb2d.linearVelocity = Vector2.zero;
-        transform.position = new Vector3(Mathf.Round(targetPosition.x),Mathf.Round(targetPosition.y),Mathf.Round(targetPosition.z));
-    }
-    private IEnumerator Up()
-    {
-        while(DownMoving||RightMoving||LeftMoving)
-        {
-            yield return null;
-        }
-        float gap = Mathf.Ceil(transform.position.y)-transform.position.y;
-        if (gap <= resetgap)
-        {
-            targetPosition = new Vector3 (transform.position.x, Mathf.Ceil(transform.position.y), transform.position.z);
-            estimateTime = gap/speed;
-        }
-        else
-        {
-            targetPosition = new Vector3 (transform.position.x, Mathf.Floor(transform.position.y), transform.position.z);
-            estimateTime = 0f;
-        }
-        
-        float elapsedTime = 0f;
-        while(estimateTime > elapsedTime)
-        {
-            elapsedTime += Time.deltaTime;
-            transform.position += new Vector3 (0f,5f,0f)*Time.deltaTime;
-            yield return null;
-        }
-        UpMoving = false;
-        rb2d.linearVelocity = Vector2.zero;
-        transform.position = new Vector3(Mathf.Round(targetPosition.x),Mathf.Round(targetPosition.y),Mathf.Round(targetPosition.z));
-    }
-    private IEnumerator Down()
-    {
-        while(UpMoving||RightMoving||LeftMoving)
-        {
-            yield return null;
-        }
-        float gap = -Mathf.Floor(transform.position.y)+transform.position.y;
-        if (gap <= resetgap)
-        {
-            targetPosition = new Vector3 (transform.position.x, Mathf.Floor(transform.position.y), transform.position.z);
-            estimateTime = gap/speed;
-        }
-        else
-        {
-            targetPosition = new Vector3 (transform.position.x, Mathf.Ceil(transform.position.y), transform.position.z);
-            estimateTime = 0f;
-        }
-        
-        float elapsedTime = 0f;
-        while(estimateTime > elapsedTime)
-        {
-            elapsedTime += Time.deltaTime;
-            transform.position += new Vector3 (0f,-5f,0f)*Time.deltaTime;
-            yield return null;
-        }
-        DownMoving = false;
-        rb2d.linearVelocity = Vector2.zero;
-        transform.position = new Vector3(Mathf.Round(targetPosition.x),Mathf.Round(targetPosition.y),Mathf.Round(targetPosition.z));
-    }
-    private IEnumerator Right()
-    {
-        while(DownMoving||UpMoving||LeftMoving)
-        {
-            yield return null;
-        }
-        float gap = Mathf.Ceil(transform.position.x)-transform.position.x;
-        if (gap <= resetgap)
-        {
-            targetPosition = new Vector3 (Mathf.Ceil(transform.position.x), transform.position.y, transform.position.z);
-            estimateTime = gap/speed;
-        }
-        else
-        {
-            targetPosition = new Vector3 (Mathf.Floor(transform.position.x), transform.position.y, transform.position.z);
-            estimateTime = 0f;
-        }
-        
-        float elapsedTime = 0f;
-        while(estimateTime > elapsedTime)
-        {
-            elapsedTime += Time.deltaTime;
-            transform.position += new Vector3 (5f,0f,0f)*Time.deltaTime;
-            yield return null;
-        }
-        RightMoving = false;
-        rb2d.linearVelocity = Vector2.zero;
-        transform.position = new Vector3(Mathf.Round(targetPosition.x),Mathf.Round(targetPosition.y),Mathf.Round(targetPosition.z));
-    }
-    private IEnumerator Left()
-    {
-        while(DownMoving||RightMoving||UpMoving)
-        {
-            yield return null;
-        }
-        float gap = -Mathf.Floor(transform.position.x)+transform.position.x;
-        if (gap <= resetgap)
-        {
-            targetPosition = new Vector3 (Mathf.Floor(transform.position.x), transform.position.y, transform.position.z);
-            estimateTime = gap/speed;
-        }
-        else
-        {
-            targetPosition = new Vector3 (Mathf.Ceil(transform.position.x), transform.position.y, transform.position.z);
-            estimateTime = 0f;
-        }
-        
-        float elapsedTime = 0f;
-        while(estimateTime > elapsedTime)
-        {
-            elapsedTime += Time.deltaTime;
-            transform.position += new Vector3 (-5f,0f,0f)*Time.deltaTime;
-            yield return null;
-        }
-        LeftMoving = false;
-        rb2d.linearVelocity = Vector2.zero;
-        transform.position = new Vector3(Mathf.Round(targetPosition.x),Mathf.Round(targetPosition.y),Mathf.Round(targetPosition.z));
+        isMoving = false;
     }
 }
+    
+    
