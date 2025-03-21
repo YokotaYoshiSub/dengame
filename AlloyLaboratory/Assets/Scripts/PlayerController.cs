@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     float preAxisV = 0.0f;
     float Distance = 0.0f;
 
-    bool isMoving = false;//移動中かどうか
+    public bool isMoving = false;//移動中かどうか
 
     
 
@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
             preAxisH = 0.0f;
             preAxisV = axisV;//上下の入力があったことを保存
         }
-
+        //Debug.Log(isMoving);
     }
 
     void FixedUpdate()
@@ -83,7 +83,11 @@ public class PlayerController : MonoBehaviour
             //動いていない状態なら
             //速度を更新
             rb2d.linearVelocity = new Vector2(speed*axisH, speed*axisV);
-            isMoving = true;
+            if (axisH != 0 || axisV != 0)
+            {
+                isMoving = true;
+            }
+            
         }
     }
     
