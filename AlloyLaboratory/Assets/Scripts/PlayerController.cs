@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
-{    
-    //移動
+{   
     private Rigidbody2D rb2d;
-    public float speed = 5.0f; 
-    float axisH = 0.0f;
-    float axisV = 0.0f;
-    float preAxisH = 0.0f;
-    float preAxisV = 0.0f;
-    float Distance = 0.0f;
+    public float speed = 5.0f;//歩きスピード
+    float axisH = 0.0f;//左右入力離散値
+    float axisV = 0.0f;//上下入力離散値
+    Vector2 inputVector;//入力方向
+    float preAxisH = 0.0f;//axisHの一時保存
+    float preAxisV = 0.0f;//axisVの一時保存
 
     public bool isMoving = false;//移動中かどうか
-
+    public bool isCoroutineWorking = false;//コルーチン中かどうか
+    public bool eventFlag = false;//イベントに入れる状態かどうか
     
 
     // Start is called before the first frame update
     void Start()
     {
-        rb2d = GetComponent<Rigidbody2D>();
+        rb2d = GetComponent<Rigidbody2D>();//Rigidbody2Dの取得
     }
 
     // Update is called once per frame
@@ -29,8 +29,8 @@ public class PlayerController : MonoBehaviour
     {       
         //Debug.Log(new Vector2(axisH, axisV));
         
-        //ダッシュ状態
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        //左シフトでダッシュ状態
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             speed = 10.0f;
         }
@@ -49,76 +49,99 @@ public class PlayerController : MonoBehaviour
         {
             axisV = Input.GetAxisRaw("Vertical");
         }
+        inputVector = new Vector2(axisH, axisV);//入力ベクトル
+        //Debug.Log(inputVector);
 
-        //入力が変更されたらコルーチン開始
-        if (preAxisH != axisH)
+        //入力が1,-1から変更されたらコルーチン開始
+        if (preAxisH != 0 && preAxisH != axisH)
         {
+            if (isCoroutineWorking)
+            {
+                //すでにコルーチンが働いていたら、入力の保存だけして抜ける
+                preAxisH = axisH;
+                preAxisV = axisV;
+                return;
+            }
             StartCoroutine(Move(preAxisH, 0.0f));
-        }
-        if (preAxisV != axisV)
-        {
-            StartCoroutine(Move(0.0f, preAxisV));
-        }
-
-        if (axisH != 0)
-        {
-            //左右入力時
-            
             preAxisH = axisH;
-            preAxisV = 0.0f;//左右の入力があったことを保存            
+            preAxisV = axisV;
         }
-        if (axisV != 0)
+        else if (preAxisV != 0 && preAxisV != axisV)
         {
-            //上下入力時
-            preAxisH = 0.0f;
-            preAxisV = axisV;//上下の入力があったことを保存
+            if (isCoroutineWorking)
+            {
+                //すでにコルーチンが働いていたら、入力の保存だけして抜ける
+                preAxisH = axisH;
+                preAxisV = axisV;
+                return;
+            }
+            StartCoroutine(Move(0.0f, preAxisV));
+            preAxisH = axisH;
+            preAxisV = axisV;
         }
-        //Debug.Log(isMoving);
+        else
+        {
+            //入力を一時保存する
+            preAxisH = axisH;
+            preAxisV = axisV;
+        }
     }
 
     void FixedUpdate()
     {
+        
         if (!isMoving)
         {
             //動いていない状態なら
             //速度を更新
             rb2d.linearVelocity = new Vector2(speed*axisH, speed*axisV);
+
             if (axisH != 0 || axisV != 0)
             {
+                //上下左右いずれかの入力があるなら、少なくとも動いている状態である
                 isMoving = true;
             }
-            
         }
+        
     }
     
     //上下左右の入力終了後の自動運転
     private IEnumerator Move(float x, float y)
     {
+        isCoroutineWorking = true;
+        float distance = 0.0f;//プレイヤーの現在位置から格子点までの距離
+
         //格子点までの距離を計測
         if (x > 0.5f)
         {
-            Distance = Mathf.Ceil(transform.position.x)-transform.position.x;
+            //右方向
+            distance = Mathf.Ceil(transform.position.x)-transform.position.x;
         }
         else if (x < -0.5f)
         {
-            Distance = transform.position.x - Mathf.Floor(transform.position.x);
+            //左方向
+            distance = transform.position.x - Mathf.Floor(transform.position.x);
         }
         else if (y > 0.5f)
         {
-            Distance = Mathf.Ceil(transform.position.y)-transform.position.y;
+            //上方向
+            distance = Mathf.Ceil(transform.position.y)-transform.position.y;
         }
         else if (y < -0.5f)
         {
-            Distance = transform.position.y - Mathf.Floor(transform.position.y);
+            //下方向
+            distance = transform.position.y - Mathf.Floor(transform.position.y);
         }
         //格子点にいたるまでの時間
-        float time = Distance / speed;
+        //直前までダッシュしていたらダッシュ、していなかったら歩き
+        float time = distance / speed;
         //格子点にいたるまで待つ
         yield return new WaitForSeconds(time);
         //格子点についたら座標を整数値にし、速度を0にし、動いていない状態にする
         transform.position = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
         rb2d.linearVelocity = Vector2.zero;
         isMoving = false;
+        isCoroutineWorking = false;
     }
 }
     
