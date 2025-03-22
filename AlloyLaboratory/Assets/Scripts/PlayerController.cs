@@ -52,6 +52,17 @@ public class PlayerController : MonoBehaviour
         inputVector = new Vector2(axisH, axisV);//入力ベクトル
         //Debug.Log(inputVector);
 
+        
+    }
+
+    void FixedUpdate()
+    {
+        if (onEvent)
+        {
+            //イベント中は移動しない
+            return;
+        }
+
         //入力が1,-1から変更されたらコルーチン開始
         if (preAxisH != 0 && preAxisH != axisH)
         {
@@ -85,15 +96,7 @@ public class PlayerController : MonoBehaviour
             preAxisH = axisH;
             preAxisV = axisV;
         }
-    }
 
-    void FixedUpdate()
-    {
-        if (onEvent)
-        {
-            //イベント中は移動しない
-            return;
-        }
         if (!isMoving)
         {
             //動いていない状態なら
@@ -106,41 +109,51 @@ public class PlayerController : MonoBehaviour
                 isMoving = true;
             }
         }
-        
+        else if(!isCoroutineWorking)
+        {
+            //動いている状態かつコルーチン未始動なら
+            //速さのみ更新→ダッシュに対応
+            rb2d.linearVelocity = new Vector2(speed*axisH, speed*axisV);
+        }
     }
     
     //上下左右の入力終了後の自動運転
     private IEnumerator Move(float x, float y)
     {
         isCoroutineWorking = true;
-        float distance = 0.0f;//プレイヤーの現在位置から格子点までの距離
+        float distance = 1.0f;//プレイヤーの現在位置から格子点までの距離
+        float isGoal = 0.1f;//ゴールまでの距離がこれ以下だったらゴールとする
 
-        //格子点までの距離を計測
-        if (x > 0.5f)
+        while(isGoal <= distance)
         {
-            //右方向
-            distance = Mathf.Ceil(transform.position.x)-transform.position.x;
+            //ゴールまでの距離が一定以下なら以下の処理を毎フレーム行う
+            //格子点までの距離を計測
+            if (x > 0.5f)
+            {
+                //右方向
+                distance = Mathf.Ceil(transform.position.x)-transform.position.x;
+                
+            }
+            else if (x < -0.5f)
+            {
+                //左方向
+                distance = transform.position.x - Mathf.Floor(transform.position.x);
+            }
+            else if (y > 0.5f)
+            {
+                //上方向
+                distance = Mathf.Ceil(transform.position.y)-transform.position.y;
+            }
+            else if (y < -0.5f)
+            {
+                //下方向
+                distance = transform.position.y - Mathf.Floor(transform.position.y);
+            }
+            //速度を更新
+            rb2d.linearVelocity = new Vector2(speed * x, speed * y);
+            yield return null;
         }
-        else if (x < -0.5f)
-        {
-            //左方向
-            distance = transform.position.x - Mathf.Floor(transform.position.x);
-        }
-        else if (y > 0.5f)
-        {
-            //上方向
-            distance = Mathf.Ceil(transform.position.y)-transform.position.y;
-        }
-        else if (y < -0.5f)
-        {
-            //下方向
-            distance = transform.position.y - Mathf.Floor(transform.position.y);
-        }
-        //格子点にいたるまでの時間
-        //直前までダッシュしていたらダッシュ、していなかったら歩き
-        float time = distance / speed;
-        //格子点にいたるまで待つ
-        yield return new WaitForSeconds(time);
+
         //格子点についたら座標を整数値にし、速度を0にし、動いていない状態にする
         transform.position = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
         rb2d.linearVelocity = Vector2.zero;
