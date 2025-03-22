@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
 
     public bool isMoving = false;//移動中かどうか
     public bool isCoroutineWorking = false;//コルーチン中かどうか
-    public bool eventFlag = false;//イベントに入れる状態かどうか
+    public bool onEvent = false;//イベント状態かどうか
     
 
     // Start is called before the first frame update
@@ -89,7 +89,11 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        
+        if (onEvent)
+        {
+            //イベント中は移動しない
+            return;
+        }
         if (!isMoving)
         {
             //動いていない状態なら

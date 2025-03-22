@@ -12,30 +12,58 @@ public class GameManager : MonoBehaviour
     public GameObject TextPanel;//下端のテキストパネル
     public Image SpeakerIcon;//話者アイコン
     public Image TextBox;//テキストボックス
-    public Text text;//文章
+    public GameObject chatText;//文章
 
-    public GameObject player;
-    public PlayerController playerCnt;
-
+    GameObject player;//プレイヤー
+    PlayerController playerCnt;//プレイヤーコントローラー
+    GameObject playerFocus;//プレイヤーの目線
+    PlayerFocus playerFocusCS;//PlayerFocusスクリプト
+    int chatNum = 0;//会話の何番目のテキストか
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         TextPanel.SetActive(false);//最初はテキストボックスは非表示
-        player = GameObject.FindGameObjectWithTag("Player");
-        playerCnt = player.GetComponent<PlayerController>();
+        player = GameObject.FindGameObjectWithTag("Player");//プレイヤーを取得
+        playerCnt = player.GetComponent<PlayerController>();//プレイヤーコントローラーを取得
+        playerFocus = GameObject.FindGameObjectWithTag("PlayerFocus");//プレイヤーの目線を取得
+        playerFocusCS = playerFocus.GetComponent<PlayerFocus>();//PlayerFocusスクリプト取得
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (playerCnt.eventFlag == true)
+        if (playerFocusCS.eventFlag == true)
         {
-            
-            if(Input.GetKeyDown(KeyCode.Return))
+            if (chatNum == 0)
             {
-                TextPanel.SetActive(true);//テキストボックス表示
+                if(Input.GetKeyDown(KeyCode.Return))
+                {
+                    TextPanel.SetActive(true);//テキストボックス表示
+                    
+                    chatText.GetComponent<Text>().text = playerFocusCS.texts[0];
+                    chatNum = 1;
+                }
             }
+            else if (chatNum >= playerFocusCS.textNum)
+            {
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    chatText.GetComponent<Text>().text = null;
+                    TextPanel.SetActive(false);
+                    chatNum = 0;
+                }
+            }
+            else if (chatNum >= 1)
+            {
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    chatText.GetComponent<Text>().text = playerFocusCS.texts[chatNum];
+                    chatNum += 1;
+                }
+            }
+
+            
         }
     }
 }
