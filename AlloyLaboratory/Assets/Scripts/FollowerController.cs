@@ -16,7 +16,7 @@ public class FollowerController : MonoBehaviour
     float distance;//プレイヤーとの距離
 
     float speed = 5.0f;//移動速度
-    float gap;//ゴールまでの距離
+    float gap = 1.0f;//ゴールまでの距離
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -42,14 +42,18 @@ public class FollowerController : MonoBehaviour
         distance = new Vector2(player.transform.position.x - transform.position.x, 
         player.transform.position.y - transform.position.y).magnitude;
 
-        
-        if (distance < 1.1f)
+        if (distance < 0.1f)
+        {
+            //プレイヤーと重なっていたらポジションリセット
+            Invoke("CheckPosition", 0.1f);
+        }
+        else if (distance < 1.9f)
         {
             //普通の状態
             //ダッシュ状態
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift))
             {
-                speed = 10.0f;
+                speed = 8.0f;
             }
             //ダッシュ解除
             if (Input.GetKeyUp(KeyCode.LeftShift))
@@ -61,9 +65,9 @@ public class FollowerController : MonoBehaviour
         {
             //プレイヤーから離れたら速くして追いつかせる
             //ダッシュ状態
-            if (Input.GetKeyDown(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift))
             {
-                speed = 12.0f;
+                speed = 9.0f;
             }
             //ダッシュ解除
             if (Input.GetKeyUp(KeyCode.LeftShift))
@@ -74,7 +78,7 @@ public class FollowerController : MonoBehaviour
         else
         {
             //プレイヤーと離れすぎたら強制的に近づける
-            transform.position = new Vector2(player.transform.position.x, player.transform.position.y - 1.0f);
+            ResetPosition();
         }
 
         
@@ -85,24 +89,49 @@ public class FollowerController : MonoBehaviour
         //プレイヤーを取得出来たら
         if (player != null)
         {
-            if (playerRb2d.linearVelocity.magnitude < 4f)
+            if (playerRb2d.linearVelocity.magnitude < 1f)
             {
+                //プレイヤーが止まっていたらこちらも動かない
                 return;
             }
             if (!isMoving && playerCnt.isMoving)
             {
                 //プレイヤーに追従する
-                //Debug.Log("移動はじめ");
-                StartCoroutine(Move());
+                
+                if (distance < 0.85f)
+                {
+                    //プレイヤーとの距離がすでに近かったらちょっと待つ
+                    //Debug.Log("すでに近い");
+                    return;
+                }
+                else
+                {
+                    //でなければ移動開始
+                    StartCoroutine(Move());
+                }
             }
         }
+    }
+
+    //距離を調べてポジションをリセットする
+    void CheckPosition()
+    {
+        if (distance < 0.1f)
+        {
+            ResetPosition();
+        }
+    }
+    //ポジションをリセットする
+    void ResetPosition()
+    {
+        transform.position = new Vector2(player.transform.position.x, player.transform.position.y - 1.0f);
     }
 
     IEnumerator Move()
     {
         //動いているフラグ立て
         isMoving = true;
-        float gap = 1.0f;//毎フレーム更新する、ゴールまでの距離
+        float time = 0.0f;
         float isGoal = 0.1f;//ゴールまでの距離がこれ以下だったらゴールとする
         
         //ゴールはプレイヤーの座標に最も近い格子点
@@ -110,19 +139,20 @@ public class FollowerController : MonoBehaviour
         //ゴールの方向の正規ベクトル
         targetDirection = new Vector2(targetPosition.x - transform.position.x, targetPosition.y - transform.position.y).normalized;
         //速度を設定
-        if (playerRb2d.linearVelocity.magnitude >= 0.1f)
-        {
-            rb2d.linearVelocity = new Vector2(targetDirection.x * speed, targetDirection.y * speed);
-        }
+        rb2d.linearVelocity = new Vector2(targetDirection.x * speed, targetDirection.y * speed);
+       
         
 
-        while(isGoal <= gap)
+        while(true)
         {
             //ゴールまでの距離が一定以下なら以下の処理を毎フレーム行う
+
+            time += Time.deltaTime;
 
             if (playerRb2d.linearVelocity.magnitude < 0.1f)
             {
                 //プレイヤーが止まっていたら
+                //Debug.Log("プレイヤー停止");
                 //動いているフラグおろし
                 isMoving = false;
                 //速度をゼロに
@@ -140,8 +170,16 @@ public class FollowerController : MonoBehaviour
             //ゴールまでの距離を更新
             gap = new Vector2(targetPosition.x - transform.position.x, targetPosition.y - transform.position.y).magnitude;
             
+            //ゴールに十分近づいたらおわり
+            if (gap < isGoal)
+            {
+                break;
+            }
+
             yield return null;
         }
+
+        Debug.Log(time);
         //動いているフラグおろし
         isMoving = false;
         //速度をゼロに

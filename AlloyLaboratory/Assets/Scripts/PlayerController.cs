@@ -15,7 +15,10 @@ public class PlayerController : MonoBehaviour
     public bool isMoving = false;//移動中かどうか
     public bool isCoroutineWorking = false;//コルーチン中かどうか
     public bool onEvent = false;//イベント状態かどうか
-    
+    bool isRight = false;//右方向コルーチン開始フラグ
+    bool isLeft = false;//左方向コルーチン開始フラグ
+    bool isUp = false;//上方向コルーチン開始フラグ
+    bool isDown = false;//下方向コルーチン開始フラグ
 
     // Start is called before the first frame update
     void Start()
@@ -32,7 +35,7 @@ public class PlayerController : MonoBehaviour
         //左シフトでダッシュ状態
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            speed = 10.0f;
+            speed = 8.0f;
         }
         //ダッシュ解除
         if (Input.GetKeyUp(KeyCode.LeftShift))
@@ -52,7 +55,54 @@ public class PlayerController : MonoBehaviour
         inputVector = new Vector2(axisH, axisV);//入力ベクトル
         //Debug.Log(inputVector);
 
-        
+        //入力が1,-1から変更されたらコルーチン開始フラグオン
+        if (preAxisH != 0 && preAxisH != axisH)
+        {
+            if (isCoroutineWorking)
+            {
+                //すでにコルーチンが働いていたら、入力の保存だけして抜ける
+                preAxisH = axisH;
+                preAxisV = axisV;
+                return;
+            }
+            else if(preAxisH > 0.5f)
+            {
+                isRight = true;
+            }
+            else if(preAxisH < -0.5f)
+            {
+                isLeft = true;
+            }
+            preAxisH = axisH;
+            preAxisV = axisV;
+        }
+        else if (preAxisV != 0 && preAxisV != axisV)
+        {
+            //Debug.Log(preAxisV);
+            if (isCoroutineWorking)
+            {
+                //すでにコルーチンが働いていたら、入力の保存だけして抜ける
+                preAxisH = axisH;
+                preAxisV = axisV;
+                return;
+            }
+            else if(preAxisV > 0.5f)
+            {
+                isUp = true;
+            }
+            else if(preAxisV < -0.5f)
+            {
+                isDown = true;
+            }
+            preAxisH = axisH;
+            preAxisV = axisV;
+        }
+        else
+        {
+            //入力を一時保存する
+            preAxisH = axisH;
+            preAxisV = axisV;
+        }
     }
 
     void FixedUpdate()
@@ -63,38 +113,25 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        //入力が1,-1から変更されたらコルーチン開始
-        if (preAxisH != 0 && preAxisH != axisH)
+        if (isRight)
         {
-            if (isCoroutineWorking)
-            {
-                //すでにコルーチンが働いていたら、入力の保存だけして抜ける
-                preAxisH = axisH;
-                preAxisV = axisV;
-                return;
-            }
-            StartCoroutine(Move(preAxisH, 0.0f));
-            preAxisH = axisH;
-            preAxisV = axisV;
+            //右移動フラグオンなら
+            StartCoroutine(Move(1.0f, 0.0f));
         }
-        else if (preAxisV != 0 && preAxisV != axisV)
+        else if (isLeft)
         {
-            if (isCoroutineWorking)
-            {
-                //すでにコルーチンが働いていたら、入力の保存だけして抜ける
-                preAxisH = axisH;
-                preAxisV = axisV;
-                return;
-            }
-            StartCoroutine(Move(0.0f, preAxisV));
-            preAxisH = axisH;
-            preAxisV = axisV;
+            //左移動フラグオンなら
+            StartCoroutine(Move(-1.0f, 0.0f));
         }
-        else
+        else if (isUp)
         {
-            //入力を一時保存する
-            preAxisH = axisH;
-            preAxisV = axisV;
+            //左移動フラグオンなら
+            StartCoroutine(Move(0.0f, 1.0f));
+        }
+        else if (isDown)
+        {
+            //左移動フラグオンなら
+            StartCoroutine(Move(0.0f, -1.0f));
         }
 
         if (!isMoving)
@@ -120,11 +157,19 @@ public class PlayerController : MonoBehaviour
     //上下左右の入力終了後の自動運転
     private IEnumerator Move(float x, float y)
     {
-        isCoroutineWorking = true;
+        isCoroutineWorking = true;//コルーチン始動フラグ
+
+        //すでに移動開始したので、コルーチンが重複しないよう方向フラグoff
+        isRight = false;
+        isLeft = false;
+        isUp = false;
+        isDown = false;
+
         float distance = 1.0f;//プレイヤーの現在位置から格子点までの距離
         float isGoal = 0.1f;//ゴールまでの距離がこれ以下だったらゴールとする
 
-        while(isGoal <= distance)
+
+        while(true)
         {
             //ゴールまでの距離が一定以下なら以下の処理を毎フレーム行う
             //格子点までの距離を計測
@@ -149,6 +194,20 @@ public class PlayerController : MonoBehaviour
                 //下方向
                 distance = transform.position.y - Mathf.Floor(transform.position.y);
             }
+
+            //ゴールに近づいたらループを抜ける
+            if (isGoal > distance)
+            {
+                break;
+            }
+            //distanceの値がおかしくなった時用
+            //場所がほぼ格子点上ならそこで止める
+            if (new Vector2(transform.position.x - Mathf.Round(transform.position.x), 
+            transform.position.y - Mathf.Round(transform.position.y)).magnitude < 0.1f)
+            {
+                break;
+            }
+
             //速度を更新
             rb2d.linearVelocity = new Vector2(speed * x, speed * y);
             yield return null;
@@ -159,6 +218,7 @@ public class PlayerController : MonoBehaviour
         rb2d.linearVelocity = Vector2.zero;
         isMoving = false;
         isCoroutineWorking = false;
+        
     }
 }
     
