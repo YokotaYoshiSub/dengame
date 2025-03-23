@@ -179,7 +179,7 @@ public class FollowerController : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log(time);
+        //Debug.Log(time);
         //動いているフラグおろし
         isMoving = false;
         //速度をゼロに
