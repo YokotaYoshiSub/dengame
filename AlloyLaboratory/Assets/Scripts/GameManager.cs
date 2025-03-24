@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
                 if(Input.GetKeyDown(KeyCode.Return))
                 {
                     //Enterキーを押すと
+                    
                     TextPanel.SetActive(true);//テキストボックス表示
                     chatText.GetComponent<Text>().text = playerFocusCS.texts[0];//配列の1番目のテキストを表示
                     chatNum = 1;//1番目の会話終了
