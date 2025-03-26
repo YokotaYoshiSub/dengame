@@ -5,20 +5,25 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    //------------------左端の情報パネル----------------------
     public GameObject InformationPanel;//左端の情報パネル
     public Image CharaIcon;//操作キャラクターのアイコン
     public Sprite Chara1;//誰かのアイコン画像
+    //----------------下端のテキストパネル---------------------
 
     public GameObject TextPanel;//下端のテキストパネル
     public Image SpeakerIcon;//話者アイコン
     public Image TextBox;//テキストボックス
+    public GameObject nameText;//名前
     public GameObject chatText;//文章
+    int chatNum = 0;//会話の何番目のテキストか
+    //--------------------その他-------------------------
 
     GameObject player;//プレイヤー
     PlayerController playerCnt;//プレイヤーコントローラー
     GameObject playerFocus;//プレイヤーの目線
     PlayerFocus playerFocusCS;//PlayerFocusスクリプト
-    int chatNum = 0;//会話の何番目のテキストか
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -42,8 +47,8 @@ public class GameManager : MonoBehaviour
                 if(Input.GetKeyDown(KeyCode.Return))
                 {
                     //Enterキーを押すと
-                    
                     TextPanel.SetActive(true);//テキストボックス表示
+                    nameText.GetComponent<Text>().text = playerFocusCS.people[0];//配列の1番目の名前を表示
                     chatText.GetComponent<Text>().text = playerFocusCS.texts[0];//配列の1番目のテキストを表示
                     chatNum = 1;//1番目の会話終了
                 }
@@ -54,6 +59,7 @@ public class GameManager : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
                     //Enterキーを押すと
+                    nameText.GetComponent<Text>().text = null;//名前をなにもなしに
                     chatText.GetComponent<Text>().text = null;//テキストをなにもなしに
                     TextPanel.SetActive(false);//テキストボックス非表示
                     chatNum = 0;//会話していない状態に変更
@@ -65,12 +71,11 @@ public class GameManager : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
                     //Enterキーを押すと
+                    nameText.GetComponent<Text>().text = playerFocusCS.people[chatNum];//配列のn+1番目の名前を表示
                     chatText.GetComponent<Text>().text = playerFocusCS.texts[chatNum];//配列のn+1番目のテキストを表示
                     chatNum += 1;//n+1回目の会話終了
                 }
             }
-
-            
         }
     }
 }

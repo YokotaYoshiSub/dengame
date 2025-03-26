@@ -35,9 +35,6 @@ public class FollowerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        
-
         //プレイヤーとの距離を計測
         distance = new Vector2(player.transform.position.x - transform.position.x, 
         player.transform.position.y - transform.position.y).magnitude;
@@ -96,6 +93,8 @@ public class FollowerController : MonoBehaviour
             }
             if (!isMoving && playerCnt.isMoving)
             {
+                //こちらが動いていない＝格子点にいるかつ
+                //プレイヤーが動いたら
                 //プレイヤーに追従する
                 
                 if (distance < 0.85f)

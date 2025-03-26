@@ -218,7 +218,14 @@ public class PlayerController : MonoBehaviour
         rb2d.linearVelocity = Vector2.zero;
         isMoving = false;
         isCoroutineWorking = false;
-        
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.tag == "Damage1")
+        {
+            //敵に接触した時の処理
+        }
     }
 }
     
