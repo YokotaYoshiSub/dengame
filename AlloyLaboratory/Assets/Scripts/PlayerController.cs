@@ -19,11 +19,16 @@ public class PlayerController : MonoBehaviour
     bool isLeft = false;//左方向コルーチン開始フラグ
     bool isUp = false;//上方向コルーチン開始フラグ
     bool isDown = false;//下方向コルーチン開始フラグ
+    int maxHp = 3;//最大hp
+    public static int hp = 3;//hp
+    GameObject enemy;
 
     // Start is called before the first frame update
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();//Rigidbody2Dの取得
+        enemy = GameObject.FindGameObjectWithTag("Damage1");
+        hp = maxHp;
     }
 
     // Update is called once per frame
@@ -154,7 +159,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    //上下左右の入力終了後の自動運転
+    //----------------------上下左右の入力終了後の自動運転-------------------------
     private IEnumerator Move(float x, float y)
     {
         isCoroutineWorking = true;//コルーチン始動フラグ
@@ -220,11 +225,57 @@ public class PlayerController : MonoBehaviour
         isCoroutineWorking = false;
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    //-----------------------------被弾モーション-------------------------
+    private IEnumerator HitByEnemy()
     {
-        if (collision.gameObject.tag == "Damage1")
+        //一瞬入力を受け付けない時間を設ける
+        isMoving = true;
+        isCoroutineWorking = true;
+
+        float blownTime = 0;//吹っ飛ばされてからの時間
+        float blownSpeed = 3f;//吹っ飛ばされる速さ
+
+        //敵の方向に応じて吹っ飛ばす
+        //吹っ飛ばす方向の正規ベクトル
+        Vector2 blownDirection = new Vector2((transform.position.x - enemy.transform.position.x),(transform.position.y - enemy.transform.position.y)).normalized;
+
+        while(true)
+        {
+            
+            blownSpeed = (0.3f - blownTime)*27;
+            rb2d.linearVelocity = new Vector2(blownDirection.x * blownSpeed, blownDirection.y * blownSpeed);
+            blownTime += Time.deltaTime;
+
+            if (blownTime > 0.3f)
+            {
+                //時間がたったら終了
+                break;
+            }
+
+            yield return null;
+        }
+
+        //最終的にまた入力を受け付け、移動できるようにする
+        isMoving = false;
+        isCoroutineWorking = false;
+
+        //このとき入力がなかったら格子点に移動する
+        if (axisH == 0 && axisV == 0)
+        {
+            //実際には2~3fかけて移動させたい
+            transform.position = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Damage1")
         {
             //敵に接触した時の処理
+            hp -= 1;
+            
+            //敵と反対方向に弾き飛ばされる
+            StartCoroutine(HitByEnemy());
         }
     }
 }

@@ -86,7 +86,6 @@ public class EnemyChaseController : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            Debug.Log("1");
             //プレイヤーに衝突したら
             breakCoroutine = true;
             rb2d.linearVelocity = Vector2.zero;//停止
