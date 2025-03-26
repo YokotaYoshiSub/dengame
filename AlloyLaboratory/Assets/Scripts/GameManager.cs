@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour
         if (PlayerController.hp <= 0)
         {
             //プレイヤーの体力が0を下回ったら
-            Invoke("GameOver", 1.0f);
+            Invoke("GameOver", 0.5f);
         }
     }
 

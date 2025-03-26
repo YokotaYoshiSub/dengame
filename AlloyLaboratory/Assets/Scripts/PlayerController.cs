@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
 
     void Update()
-    {       
+    {
         //Debug.Log(new Vector2(axisH, axisV));
         
         //左シフトでダッシュ状態

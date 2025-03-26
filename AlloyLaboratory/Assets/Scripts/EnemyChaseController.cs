@@ -92,6 +92,15 @@ public class EnemyChaseController : MonoBehaviour
             enemyCollider.enabled = false;//当たり判定を消去
             StartCoroutine(Restart());//再度追いかける。当たり判定を復活する
         }
+        else
+        {
+            //別のなにかに衝突したら
+            breakCoroutine = true;
+            rb2d.linearVelocity = Vector2.zero;//停止
+            //近くの格子点に移動
+            transform.position = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
+            StartCoroutine(Restart());//再度追いかける。当たり判定を復活する
+        }
     }
 
     IEnumerator Move(Vector2 moveDirection)
