@@ -150,6 +150,10 @@ public class PlayerController : MonoBehaviour
                 //上下左右いずれかの入力があるなら、少なくとも動いている状態である
                 isMoving = true;
             }
+            else
+            {
+                transform.position = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
+            }
         }
         else if(!isCoroutineWorking)
         {
@@ -267,9 +271,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        if (other.gameObject.tag == "Damage1")
+        if (collision.gameObject.tag == "Damage1")
         {
             //敵に接触した時の処理
             hp -= 1;

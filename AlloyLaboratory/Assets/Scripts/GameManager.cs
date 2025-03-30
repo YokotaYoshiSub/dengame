@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviour
                 if(Input.GetKeyDown(KeyCode.Return))
                 {
                     //Enterキーを押すと
+                    Time.timeScale = 0;//ゲームストップ
                     textPanel.SetActive(true);//テキストボックス表示
                     nameText.GetComponent<Text>().text = playerFocusCS.people[0];//配列の1番目の名前を表示
                     chatText.GetComponent<Text>().text = playerFocusCS.texts[0];//配列の1番目のテキストを表示
@@ -68,6 +69,7 @@ public class GameManager : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
                     //Enterキーを押すと
+                    Time.timeScale = 1;//ゲーム再開
                     nameText.GetComponent<Text>().text = null;//名前をなにもなしに
                     chatText.GetComponent<Text>().text = null;//テキストをなにもなしに
                     textPanel.SetActive(false);//テキストボックス非表示
