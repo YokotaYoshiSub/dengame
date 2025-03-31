@@ -19,6 +19,14 @@ public class EnemyChaseController : MonoBehaviour
     public float waitTime = 1.5f;//一時停止時間
     bool breakCoroutine = false;//コルーチン脱出フラグ
     public bool isBlocked = false;//壁衝突フラグ。プレイヤーの方向にいけるかどうか
+    
+    public float down = 0.0f;//ブロックを避けるための下方向移動量
+    public float right = 0.0f;//ブロックを避けるための右方向移動量
+    public float up = 0.0f;//ブロックを避けるための上方向移動量
+    public float left = 0.0f;//ブロックを避けるための左方向移動量
+    float dx = 0.0f;//ブロックを避けるために実際に横方向に移動する量
+    float dy = 0.0f;//ブロックを避けるために実際に縦方向に移動する量
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -85,12 +93,12 @@ public class EnemyChaseController : MonoBehaviour
                 {
                     //プレイヤーの方向に障害物がないならプレイヤーの方向に
                     StartCoroutine(Move(moveDirection));
-                    Debug.Log(moveDirection);
+                    //Debug.Log(moveDirection);
                 }
                 else
                 {
                     //プレイヤーの方向に障害物があるならよけるように
-                    AvoidBlock();
+                    AvoidBlock(down, right, up, left);
                 }
             }
             
@@ -172,7 +180,7 @@ public class EnemyChaseController : MonoBehaviour
 
     
 
-    void AvoidBlock()
+    void AvoidBlock(float down, float right, float up, float left)
     {
         //Debug.Log("ブロック回避");
 
@@ -189,7 +197,8 @@ public class EnemyChaseController : MonoBehaviour
             //プレイヤーが右のほうにいる
             //右に移動
             //Debug.Log("右");
-            StartCoroutine(Move(new Vector2(1.0f, 0f)));
+            dx = right;
+            dy = 0;
         }
         else if ((playerDirectionDegree >= 130 && playerDirectionDegree <= 180)||
         (playerDirectionDegree >= 0 && playerDirectionDegree < 50))
@@ -198,7 +207,8 @@ public class EnemyChaseController : MonoBehaviour
             //上に移動
             //Debug.Log("上");
             //Debug.Log(playerDirectionDegree);
-            StartCoroutine(Move(new Vector2(0f, 1.0f)));
+            dx = 0;
+            dy = up;
         }
         else if ((playerDirectionDegree >= -50 && playerDirectionDegree < 0)||
         (playerDirectionDegree >= -180 && playerDirectionDegree < -130))
@@ -206,15 +216,19 @@ public class EnemyChaseController : MonoBehaviour
             //プレイヤーが下のほうにいる
             //下に移動
             //Debug.Log("下");
-            StartCoroutine(Move(new Vector2(0f, -1.0f)));
+            dx = 0;
+            dy = -down;
         }
         else
         {
             //プレイヤーが左のほうにいる
             //左に移動
             //Debug.Log("左");
-            StartCoroutine(Move(new Vector2(-1.0f, 0f)));
+            dx = -left;
+            dy = 0;
         }
+        //Debug.Log(new Vector2(dx, dy));
+        StartCoroutine(Move(new Vector2(dx, dy)));
     }
 
     IEnumerator Restart()
