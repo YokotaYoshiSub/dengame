@@ -5471,6 +5471,7 @@ MonoBehaviour:
   isMoving: 0
   isCoroutineWorking: 0
   onEvent: 0
+  maxHp: 3
 --- !u!212 &1310127164
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5681,9 +5682,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 317a99497c220a647b27ced178466f84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 6
+  speed: 3
   playerDirectionDegree: 0
-  waitTime: 0.5
+  waitTime: 1.2
   isBlocked: 0
   down: 0
   right: 0
