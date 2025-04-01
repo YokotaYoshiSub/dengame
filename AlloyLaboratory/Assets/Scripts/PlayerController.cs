@@ -19,7 +19,8 @@ public class PlayerController : MonoBehaviour
     bool isLeft = false;//左方向コルーチン開始フラグ
     bool isUp = false;//上方向コルーチン開始フラグ
     bool isDown = false;//下方向コルーチン開始フラグ
-    int maxHp = 3;//最大hp
+    //-------------------------HP関連------------------------
+    public int maxHp = 3;//最大hp
     public static int hp = 3;//hp
     GameObject enemy;
 
@@ -237,16 +238,23 @@ public class PlayerController : MonoBehaviour
         isCoroutineWorking = true;
 
         float blownTime = 0;//吹っ飛ばされてからの時間
-        float blownSpeed = 3f;//吹っ飛ばされる速さ
+        float blownSpeed;//吹っ飛ばされる速さ
 
         //敵の方向に応じて吹っ飛ばす
         //吹っ飛ばす方向の正規ベクトル
         Vector2 blownDirection = new Vector2((transform.position.x - enemy.transform.position.x),(transform.position.y - enemy.transform.position.y)).normalized;
+        //吹っ飛ばされる先
+        Vector2 blownGoal = new Vector2(Mathf.Round(transform.position.x + blownDirection.x), Mathf.Round(transform.position.y + blownDirection.y));
+        //吹っ飛ばされる強さ
+        float blownForce = new Vector2(blownGoal.x - transform.position.x, blownGoal.y - transform.position.y).magnitude * 27f;
+
+        //Debug.Log(blownForce);
+        //Debug.Log(blownDirection);
 
         while(true)
         {
-            
-            blownSpeed = (0.3f - blownTime)*27;
+            //吹っ飛ばされているときの速さを更新
+            blownSpeed = (0.3f - blownTime)*blownForce;
             rb2d.linearVelocity = new Vector2(blownDirection.x * blownSpeed, blownDirection.y * blownSpeed);
             blownTime += Time.deltaTime;
 

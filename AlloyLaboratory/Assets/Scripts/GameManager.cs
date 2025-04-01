@@ -90,7 +90,7 @@ public class GameManager : MonoBehaviour
         }
 
         //--------------------------体力処理---------------------------
-        if (PlayerController.hp == 3)
+        if (PlayerController.hp >= 3)
         {
             hp1.gameObject.SetActive(true);
             hp2.gameObject.SetActive(true);
@@ -108,7 +108,7 @@ public class GameManager : MonoBehaviour
             hp2.gameObject.SetActive(false);
             hp3.gameObject.SetActive(false);
         }
-        else
+        else 
         {
             hp1.gameObject.SetActive(false);
             hp2.gameObject.SetActive(false);

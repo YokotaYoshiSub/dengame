@@ -16,7 +16,7 @@ public class EnemyChaseController : MonoBehaviour
     Vector2 moveDirection;//実際に動く方向
 
     //-------------何かに衝突した時に使う--------------
-    public float waitTime = 1.5f;//一時停止時間
+    public float waitTime = 1.2f;//一時停止時間
     bool breakCoroutine = false;//コルーチン脱出フラグ
     public bool isBlocked = false;//壁衝突フラグ。プレイヤーの方向にいけるかどうか
     
@@ -234,6 +234,27 @@ public class EnemyChaseController : MonoBehaviour
     IEnumerator Restart()
     {
         isMoving = true;//動いていることにしてMove()の起動阻止
+
+        //少し時間をかけて近くの格子点に移動する
+        float blownTime = 0;//吹っ飛ばされてからの時間
+        float blownSpeed;//吹っ飛ばされる速さ
+        //近くの格子点の座標
+        Vector2 blownGoal = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
+        //移動方向ベクトル
+        Vector2 blownVector = new Vector2((blownGoal.x - transform.position.x), (blownGoal.y - transform.position.y));
+        //その正規ベクトル
+        Vector2 blownDirection = blownVector.normalized;
+        //移動の強さ
+        float blownForce = blownVector.magnitude * 27;
+        //Debug.Log(blownForce);
+
+        while (blownTime < 0.3f)
+        {
+            blownSpeed = (0.3f - blownTime)*blownForce;
+            rb2d.linearVelocity = new Vector2(blownDirection.x * blownSpeed, blownDirection.y * blownSpeed);
+            blownTime += Time.deltaTime;
+            yield return null;
+        }
         
         //数フレーム待機した後、当たり判定を復活させ追跡を再開する。
         yield return new WaitForSeconds(waitTime);
