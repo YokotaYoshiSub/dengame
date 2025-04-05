@@ -37,6 +37,12 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         //Debug.Log(new Vector2(axisH, axisV));
+
+        if (hp <= 0)
+        {
+            //hpが0なら入力を受け付けない
+            return;
+        }
         
         //左シフトでダッシュ状態
         if (Input.GetKey(KeyCode.LeftShift))
@@ -116,6 +122,11 @@ public class PlayerController : MonoBehaviour
         if (onEvent)
         {
             //イベント中は移動しない
+            return;
+        }
+        if (hp <= 0)
+        {
+            //hpが0なら入力を受け付けない
             return;
         }
 
@@ -237,46 +248,47 @@ public class PlayerController : MonoBehaviour
         isMoving = true;
         isCoroutineWorking = true;
 
-        float blownTime = 0;//吹っ飛ばされてからの時間
+        float time = 0;//吹っ飛ばされてからの時間
+        float blownTime = 0.4f;//吹っ飛ばされる時間
         float blownSpeed;//吹っ飛ばされる速さ
 
-        //敵の方向に応じて吹っ飛ばす
+        //敵の方向と反対方向に1吹き飛ばす
         //吹っ飛ばす方向の正規ベクトル
         Vector2 blownDirection = new Vector2((transform.position.x - enemy.transform.position.x),(transform.position.y - enemy.transform.position.y)).normalized;
-        //吹っ飛ばされる先
+        //吹っ飛ばされる先はもっとも近い格子点
         Vector2 blownGoal = new Vector2(Mathf.Round(transform.position.x + blownDirection.x), Mathf.Round(transform.position.y + blownDirection.y));
         //吹っ飛ばされる強さ
-        float blownForce = new Vector2(blownGoal.x - transform.position.x, blownGoal.y - transform.position.y).magnitude * 27f;
+        //吹っ飛ばされる先までの距離に比例
+        float blownForce = new Vector2(blownGoal.x - transform.position.x, blownGoal.y - transform.position.y).magnitude * 60f;
 
         //Debug.Log(blownForce);
         //Debug.Log(blownDirection);
 
-        while(true)
+        while(time <= blownTime)
         {
             //吹っ飛ばされているときの速さを更新
-            blownSpeed = (0.3f - blownTime)*blownForce;
-            rb2d.linearVelocity = new Vector2(blownDirection.x * blownSpeed, blownDirection.y * blownSpeed);
-            blownTime += Time.deltaTime;
-
-            if (blownTime > 0.3f)
-            {
-                //時間がたったら終了
-                break;
-            }
-
+            blownSpeed = (blownTime - time)*blownForce;
+            rb2d.linearVelocity = new Vector2((blownGoal.x - transform.position.x) * blownSpeed, (blownGoal.y - transform.position.y) * blownSpeed);
+            time += Time.deltaTime;
             yield return null;
         }
+        
+        //格子点に移動
+        transform.position = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
 
         //最終的にまた入力を受け付け、移動できるようにする
         isMoving = false;
         isCoroutineWorking = false;
+    }
 
-        //このとき入力がなかったら格子点に移動する
-        if (axisH == 0 && axisV == 0)
-        {
-            //実際には2~3fかけて移動させたい
-            transform.position = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
-        }
+    //----------------------------やられモーション---------------------------------
+    IEnumerator Dead()
+    {
+        //アニメーションを流す
+        //血を飛び散らせる
+        //入力を拒否する
+        rb2d.linearVelocity = Vector2.zero;//いったんその場で停止
+        yield return null;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
@@ -286,8 +298,15 @@ public class PlayerController : MonoBehaviour
             //敵に接触した時の処理
             hp -= 1;
             
-            //敵と反対方向に弾き飛ばされる
-            StartCoroutine(HitByEnemy());
+            //体力が残っていたら敵と反対方向に弾き飛ばされる
+            if (hp > 0)
+            {
+                StartCoroutine(HitByEnemy());
+            }
+            else
+            {
+                StartCoroutine(Dead());
+            }
         }
     }
 }

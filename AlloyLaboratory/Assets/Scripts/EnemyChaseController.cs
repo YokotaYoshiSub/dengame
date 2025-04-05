@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyChaseController : MonoBehaviour
 {
     GameObject player;//プレイヤー
+    //PlayerController playerCnt;//プレイヤーコントローラー
     public float speed = 3.0f;//追跡速度
     bool isMoving = false;//動いているかどうか
     Rigidbody2D rb2d;//Rigidbody2D;
@@ -31,6 +32,7 @@ public class EnemyChaseController : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");//プレイヤーを取得
+        //playerCnt = player.GetComponent<PlayerController>();//プレイヤーコントローラーを取得
         rb2d = GetComponent<Rigidbody2D>();//Rigidbody2Dを取得
         enemyCollider = GetComponent<CircleCollider2D>();//CircleCollider2Dを取得
         
@@ -39,6 +41,10 @@ public class EnemyChaseController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (PlayerController.hp <= 0)
+        {
+            breakCoroutine = true;
+        }
         
         //自分から見たプレイヤーの位置
         playerDirection = new Vector2(player.transform.position.x - transform.position.x, player.transform.position.y - transform.position.y);
@@ -236,31 +242,42 @@ public class EnemyChaseController : MonoBehaviour
         isMoving = true;//動いていることにしてMove()の起動阻止
 
         //少し時間をかけて近くの格子点に移動する
-        float blownTime = 0;//吹っ飛ばされてからの時間
+        float time = 0;//吹っ飛ばされてからの時間
+        float blownTime = 0.5f;//吹っ飛ばされる時間
         float blownSpeed;//吹っ飛ばされる速さ
-        //近くの格子点の座標
-        Vector2 blownGoal = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
-        //移動方向ベクトル
-        Vector2 blownVector = new Vector2((blownGoal.x - transform.position.x), (blownGoal.y - transform.position.y));
-        //その正規ベクトル
-        Vector2 blownDirection = blownVector.normalized;
-        //移動の強さ
-        float blownForce = blownVector.magnitude * 27;
+
+        //敵の方向と反対方向に0.4吹き飛ばす
+        //吹っ飛ばす方向の正規ベクトル
+        Vector2 blownDirection = new Vector2((transform.position.x - player.transform.position.x),(transform.position.y - player.transform.position.y)).normalized;
+        //吹っ飛ばされる先はもっとも近い格子点
+        Vector2 blownGoal = new Vector2(Mathf.Round(transform.position.x + blownDirection.x * 0.4f), Mathf.Round(transform.position.y + blownDirection.y * 0.4f));
+        //吹っ飛ばされる強さ
+        //吹っ飛ばされる先までの距離に比例
+        float blownForce = new Vector2(blownGoal.x - transform.position.x, blownGoal.y - transform.position.y).magnitude * 40f;
+
+
         //Debug.Log(blownForce);
 
-        while (blownTime < 0.3f)
+        while (time < blownTime)
         {
-            blownSpeed = (0.3f - blownTime)*blownForce;
-            rb2d.linearVelocity = new Vector2(blownDirection.x * blownSpeed, blownDirection.y * blownSpeed);
-            blownTime += Time.deltaTime;
+            if (PlayerController.hp <= 0)
+            {
+                //ゲームオーバーなら停止
+                rb2d.linearVelocity = Vector2.zero;
+                yield break;
+            }
+            blownSpeed = (blownTime - time)*blownForce;
+            rb2d.linearVelocity = new Vector2((blownGoal.x - transform.position.x) * blownSpeed, (blownGoal.y - transform.position.y) * blownSpeed);
+            time += Time.deltaTime;
             yield return null;
         }
+        Debug.Log(time);
         
         //数フレーム待機した後、当たり判定を復活させ追跡を再開する。
         yield return new WaitForSeconds(waitTime);
 
-        enemyCollider.enabled = true;
+        enemyCollider.enabled = true;//当たり判定復活
         breakCoroutine = false;//コルーチン脱出フラグoff
-        isMoving = false;
+        isMoving = false;//動いていない状態＝これから動ける状態にする
     }
 }
