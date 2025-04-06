@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    public string gameState = "playing";
     //------------------左端の情報パネル----------------------
     public GameObject informationPanel;//左端の情報パネル
     public Image charaIcon;//操作キャラクターのアイコン
@@ -22,7 +23,9 @@ public class GameManager : MonoBehaviour
     public GameObject chatText;//文章
     int chatNum = 0;//会話の何番目のテキストか
     //-----------------ゲームオーバー処理---------------------
+    float time = 0f;
     public GameObject gameOverPanel;
+    public GameObject titleBackButton;//タイトル画面に戻れるように
     //--------------------その他-------------------------
 
     GameObject player;//プレイヤー
@@ -36,6 +39,7 @@ public class GameManager : MonoBehaviour
     {
         textPanel.SetActive(false);//最初はテキストボックスは非表示
         gameOverPanel.SetActive(false);//最初はゲームオーバー画面を見せない
+        titleBackButton.SetActive(false);//最初は表示しない
 
         player = GameObject.FindGameObjectWithTag("Player");//プレイヤーを取得
         playerCnt = player.GetComponent<PlayerController>();//プレイヤーコントローラーを取得
@@ -120,6 +124,16 @@ public class GameManager : MonoBehaviour
         {
             //プレイヤーの体力が0を下回ったら
             Invoke("GameOver", 1.0f);
+            gameState = "gameOver";
+        }
+        if (gameState == "gameOver")
+        {
+            time += Time.deltaTime;
+            if (time >= 2.0f)
+            {
+                //タイトルに戻れるように
+                titleBackButton.SetActive(true);
+            }
         }
     }
 
