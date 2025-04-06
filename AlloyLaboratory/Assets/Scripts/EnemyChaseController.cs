@@ -250,10 +250,10 @@ public class EnemyChaseController : MonoBehaviour
         //吹っ飛ばす方向の正規ベクトル
         Vector2 blownDirection = new Vector2((transform.position.x - player.transform.position.x),(transform.position.y - player.transform.position.y)).normalized;
         //吹っ飛ばされる先はもっとも近い格子点
-        Vector2 blownGoal = new Vector2(Mathf.Round(transform.position.x + blownDirection.x * 0.4f), Mathf.Round(transform.position.y + blownDirection.y * 0.4f));
+        Vector2 blownGoal = new Vector2(Mathf.Round(transform.position.x + blownDirection.x * 0.5f), Mathf.Round(transform.position.y + blownDirection.y * 0.5f));
         //吹っ飛ばされる強さ
         //吹っ飛ばされる先までの距離に比例
-        float blownForce = new Vector2(blownGoal.x - transform.position.x, blownGoal.y - transform.position.y).magnitude * 40f;
+        float blownForce = new Vector2(blownGoal.x - transform.position.x, blownGoal.y - transform.position.y).magnitude * 30f;
 
 
         //Debug.Log(blownForce);

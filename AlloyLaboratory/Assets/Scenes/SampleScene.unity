@@ -1132,12 +1132,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isScrollX: 0
   scrollX: 1
-  maxScrollX: 3
-  minScrollX: -3
+  maxScrollX: 10
+  minScrollX: -10
   isScrollY: 0
   scrollY: 1
-  maxScrollY: 2
-  minScrollY: -2
+  maxScrollY: 10
+  minScrollY: -10
 --- !u!1 &552803643
 GameObject:
   m_ObjectHideFlags: 0
@@ -5492,7 +5492,7 @@ MonoBehaviour:
   isMoving: 0
   isCoroutineWorking: 0
   onEvent: 0
-  maxHp: 3
+  maxHp: 999
 --- !u!212 &1310127164
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -5738,7 +5738,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   playerDirectionDegree: 0
-  waitTime: 1.2
+  waitTime: 0.5
   isBlocked: 0
   down: 0
   right: 0
