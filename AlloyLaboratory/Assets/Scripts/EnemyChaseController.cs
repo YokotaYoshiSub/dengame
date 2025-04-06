@@ -271,7 +271,7 @@ public class EnemyChaseController : MonoBehaviour
             time += Time.deltaTime;
             yield return null;
         }
-        Debug.Log(time);
+        //Debug.Log(time);
         
         //数フレーム待機した後、当たり判定を復活させ追跡を再開する。
         yield return new WaitForSeconds(waitTime);
