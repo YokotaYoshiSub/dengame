@@ -308,6 +308,28 @@ public class PlayerController : MonoBehaviour
                 StartCoroutine(Dead());
             }
         }
+        if (collision.gameObject.tag == "Damage2")
+        {
+            //敵に接触した時の処理
+            hp -= 2;
+            
+            //体力が残っていたら敵と反対方向に弾き飛ばされる
+            if (hp > 0)
+            {
+                StartCoroutine(HitByEnemy());
+            }
+            else
+            {
+                StartCoroutine(Dead());
+            }
+        }
+        if (collision.gameObject.tag == "Damage3")
+        {
+            //即死
+            hp -= 3;
+            StartCoroutine(Dead());
+            
+        }
     }
 }
     

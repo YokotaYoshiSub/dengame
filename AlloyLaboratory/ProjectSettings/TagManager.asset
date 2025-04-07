@@ -8,6 +8,9 @@ TagManager:
   - PlayerFocus
   - Damage1
   - Block
+  - Enemy
+  - Damage2
+  - Damage3
   layers:
   - Default
   - TransparentFX
