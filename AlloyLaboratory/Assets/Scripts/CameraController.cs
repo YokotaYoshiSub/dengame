@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -52,18 +54,18 @@ public class CameraController : MonoBehaviour
             else
             {
                 //カメラのx座標の移動範囲を制限する
-                if (player.transform.position.x >= maxScrollX)
+                if (player.transform.position.x -1.7f >= maxScrollX)
                 {
                     x = maxScrollX;
                 }
-                else if (player.transform.position.x <= minScrollX)
+                else if (player.transform.position.x - 1.7f <= minScrollX)
                 {
                     x = minScrollX;
                 }
                 else
                 {
                     //プレイヤーの位置に合わせる
-                    x = player.transform.position.x;
+                    x = player.transform.position.x - 1.7f;
                 }
             }
 
@@ -105,6 +107,35 @@ public class CameraController : MonoBehaviour
 
             //カメラの座標を更新
             transform.position = new Vector3(x, y, z);
+
+            
+        }
+    }
+
+    public void Vib()
+    {
+        StartCoroutine(CameraVib());
+    }
+    public IEnumerator CameraVib()
+    {
+        //被弾した時とかに呼び出す
+        //X方向とY方向にわけて画面を振動させる
+
+        float amptitude = 0.1f;//振動の振れ幅
+        float displacement = 0f;
+        float vivTime = 0.0f;
+
+        while(true)
+        {
+            //減衰振動
+            displacement = 10f / 3f * (0.3f - vivTime) * amptitude * Mathf.Cos(20* vivTime * Mathf.PI);
+            transform.position = new Vector3(transform.position.x + displacement, transform.position.y, z);
+            vivTime += Time.deltaTime;
+            yield return null;
+            if (vivTime >= 0.3f)
+            {
+                break;
+            }
         }
     }
 }

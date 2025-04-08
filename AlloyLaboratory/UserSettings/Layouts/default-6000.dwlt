@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 989
   m_ShowMode: 4
-  m_Title: Inspector
+  m_Title: Project
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
@@ -175,7 +175,7 @@ MonoBehaviour:
   m_MinSize: {x: 100, y: 100}
   m_MaxSize: {x: 8096, y: 16192}
   vertical: 1
-  controlID: 28
+  controlID: 61
   draggingID: 0
 --- !u!114 &8
 MonoBehaviour:
@@ -430,7 +430,7 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: 47536
+  m_LastSelectedObjectID: -1684
 --- !u!114 &14
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -527,7 +527,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Scenes
+    - Assets
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -537,16 +537,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scenes
+  - Assets
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Unity\dengame\AlloyLaboratory
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: c6910000
-    m_LastClickedID: 37318
-    m_ExpandedIDs: 000000007a910000
+    m_SelectedIDs: 7a910000
+    m_LastClickedID: 37242
+    m_ExpandedIDs: 0000000096910000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -575,7 +575,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000007a910000
+    m_ExpandedIDs: 0000000096910000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1299,9 +1299,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: -0.6130726, y: 1.0598456, z: 1885.0378}
+    m_Target: {x: 1.6726294, y: 0.8388343, z: 3346.899}
     speed: 2
-    m_Value: {x: -0.6130726, y: 1.0598456, z: 1885.0378}
+    m_Value: {x: 1.6726294, y: 0.8388343, z: 3346.899}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1351,9 +1351,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 7.829052
+    m_Target: 13.651434
     speed: 2
-    m_Value: 7.829052
+    m_Value: 13.651434
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1428,7 +1428,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 2eb8ffffd8cdffff12cffffff8d0ffff8ed1ffffded1ffff0cfbffff7a8f0000ac8f0000389000005e900000cab1000032b200007eb20000b0b40000bab4000096b90000b0b90000
+      m_ExpandedIDs: 0cfbffff4490000082900000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 

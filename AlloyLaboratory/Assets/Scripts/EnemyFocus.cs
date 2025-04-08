@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class EnemyFocusCS : MonoBehaviour
 {
-    public string parent = "Enemy";//どの敵の子か
-    GameObject enemy;//敵のゲームオブジェクト
+    public GameObject enemy;//敵のゲームオブジェクト
     EnemyChaseController enemyChaseCnt;//敵のスクリプト
     Rigidbody2D enemyRb2d;//敵の物理挙動
     float offset = 0.5f;//敵の中心からの距離
@@ -15,7 +14,6 @@ public class EnemyFocusCS : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        enemy = GameObject.FindGameObjectWithTag(parent);//敵のゲームオブジェクトを取得
         enemyChaseCnt = enemy.GetComponent<EnemyChaseController>();//敵のスクリプトを取得
         enemyRb2d = enemy.GetComponent<Rigidbody2D>();//敵の物理挙動を取得
     }

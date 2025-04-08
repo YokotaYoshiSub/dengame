@@ -22,14 +22,17 @@ public class PlayerController : MonoBehaviour
     //-------------------------HP関連------------------------
     public int maxHp = 3;//最大hp
     public static int hp = 3;//hp
-    GameObject enemy;
+    //GameObject enemy;
+    public GameObject mainCamera;
+    CameraController cameraCnt;
 
     // Start is called before the first frame update
     void Start()
     {
         rb2d = GetComponent<Rigidbody2D>();//Rigidbody2Dの取得
-        enemy = GameObject.FindGameObjectWithTag("Damage1");
+        //enemy = GameObject.FindGameObjectWithTag("Damage1");
         hp = maxHp;
+        cameraCnt = mainCamera.GetComponent<CameraController>();
     }
 
     // Update is called once per frame
@@ -241,9 +244,10 @@ public class PlayerController : MonoBehaviour
         isCoroutineWorking = false;
     }
 
-    //-----------------------------被弾モーション-------------------------
-    private IEnumerator HitByEnemy()
+    //---------------------------------------------被弾モーション-----------------------------------------------------
+    private IEnumerator HitByEnemy(Collision2D collision)
     {
+
         //一瞬入力を受け付けない時間を設ける
         isMoving = true;
         isCoroutineWorking = true;
@@ -254,7 +258,7 @@ public class PlayerController : MonoBehaviour
 
         //敵の方向と反対方向に1吹き飛ばす
         //吹っ飛ばす方向の正規ベクトル
-        Vector2 blownDirection = new Vector2((transform.position.x - enemy.transform.position.x),(transform.position.y - enemy.transform.position.y)).normalized;
+        Vector2 blownDirection = new Vector2((transform.position.x - collision.transform.position.x),(transform.position.y - collision.transform.position.y)).normalized;
         //吹っ飛ばされる先はもっとも近い格子点
         Vector2 blownGoal = new Vector2(Mathf.Round(transform.position.x + blownDirection.x), Mathf.Round(transform.position.y + blownDirection.y));
         //吹っ飛ばされる強さ
@@ -281,7 +285,7 @@ public class PlayerController : MonoBehaviour
         isCoroutineWorking = false;
     }
 
-    //----------------------------やられモーション---------------------------------
+    //-------------------------------------------やられモーション---------------------------------------------
     IEnumerator Dead()
     {
         //アニメーションを流す
@@ -293,15 +297,18 @@ public class PlayerController : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        //---------------------------------------------敵と接触----------------------------------------------------
         if (collision.gameObject.tag == "Damage1")
         {
             //敵に接触した時の処理
             hp -= 1;
+            cameraCnt.Vib();
+            
             
             //体力が残っていたら敵と反対方向に弾き飛ばされる
             if (hp > 0)
             {
-                StartCoroutine(HitByEnemy());
+                StartCoroutine(HitByEnemy(collision));
             }
             else
             {
@@ -316,7 +323,7 @@ public class PlayerController : MonoBehaviour
             //体力が残っていたら敵と反対方向に弾き飛ばされる
             if (hp > 0)
             {
-                StartCoroutine(HitByEnemy());
+                StartCoroutine(HitByEnemy(collision));
             }
             else
             {

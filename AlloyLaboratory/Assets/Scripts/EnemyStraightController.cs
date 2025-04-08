@@ -58,7 +58,7 @@ public class EnemyStraightController : MonoBehaviour
             //timeが負の値なら停止
             rb2d.linearVelocity = Vector2.zero;
         }
-        Debug.Log(rb2d.linearVelocity);
+        //Debug.Log(rb2d.linearVelocity);
     }
 
     void OnCollisionEnter2D(Collision2D collision)
