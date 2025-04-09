@@ -19,11 +19,14 @@ public class PlayerController : MonoBehaviour
     bool isLeft = false;//左方向コルーチン開始フラグ
     bool isUp = false;//上方向コルーチン開始フラグ
     bool isDown = false;//下方向コルーチン開始フラグ
+
     //-------------------------HP関連------------------------
     public int maxHp = 3;//最大hp
     public static int hp = 3;//hp
     //GameObject enemy;
-    public GameObject mainCamera;
+
+    //------------------------カメラ関係-----------------------
+    GameObject mainCamera;
     CameraController cameraCnt;
 
     // Start is called before the first frame update
@@ -32,6 +35,7 @@ public class PlayerController : MonoBehaviour
         rb2d = GetComponent<Rigidbody2D>();//Rigidbody2Dの取得
         //enemy = GameObject.FindGameObjectWithTag("Damage1");
         hp = maxHp;
+        mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         cameraCnt = mainCamera.GetComponent<CameraController>();
     }
 
@@ -337,6 +341,8 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(Dead());
             
         }
+
+        
     }
 }
     

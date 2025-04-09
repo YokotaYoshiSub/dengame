@@ -26,12 +26,16 @@ public class GameManager : MonoBehaviour
     float time = 0f;
     public GameObject gameOverPanel;
     public GameObject titleBackButton;//タイトル画面に戻れるように
+    //---------------------メニューパネル
+    public GameObject menuPanel;
     //--------------------その他-------------------------
 
     GameObject player;//プレイヤー
     PlayerController playerCnt;//プレイヤーコントローラー
     GameObject playerFocus;//プレイヤーの目線
     PlayerFocus playerFocusCS;//PlayerFocusスクリプト
+    //イベントのフラグ
+    public static int eventPoint = 0;//この数値を切り替えることでイベント進行
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -40,6 +44,7 @@ public class GameManager : MonoBehaviour
         textPanel.SetActive(false);//最初はテキストボックスは非表示
         gameOverPanel.SetActive(false);//最初はゲームオーバー画面を見せない
         titleBackButton.SetActive(false);//最初は表示しない
+        menuPanel.SetActive(false);//最初は表示しない
 
         player = GameObject.FindGameObjectWithTag("Player");//プレイヤーを取得
         playerCnt = player.GetComponent<PlayerController>();//プレイヤーコントローラーを取得
@@ -90,6 +95,26 @@ public class GameManager : MonoBehaviour
                     chatText.GetComponent<Text>().text = playerFocusCS.texts[chatNum];//配列のn+1番目のテキストを表示
                     chatNum += 1;//n+1回目の会話終了
                 }
+            }
+        }
+
+        //まだ先に進めないところに行こうとしたときに引き留める
+        if (playerFocusCS.isPrevented)
+        {
+            Time.timeScale = 0;//ゲームストップ
+            textPanel.SetActive(true);//テキストボックス表示
+            nameText.GetComponent<Text>().text = playerFocusCS.people[0];//配列の1番目の名前を表示
+            chatText.GetComponent<Text>().text = playerFocusCS.texts[0];//配列の1番目のテキストを表示
+
+            if(Input.GetKeyDown(KeyCode.Return))
+            {
+                //Enterキーを押すと
+                
+                Time.timeScale = 1;//ゲーム再開
+                nameText.GetComponent<Text>().text = null;//名前をなにもなしに
+                chatText.GetComponent<Text>().text = null;//テキストをなにもなしに
+                textPanel.SetActive(false);//テキストボックス非表示
+                playerFocusCS.isPrevented = false;
             }
         }
 

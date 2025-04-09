@@ -5,21 +5,33 @@ using UnityEngine;
 public class EventController : MonoBehaviour
 {
     public int textNum = 6;//テキストの個数
-    public string person0;
-    public string text0;
-    public string person1;
-    public string text1;
-    public string person2;
-    public string text2;
-    public string person3;
-    public string text3;
-    public string person4;
-    public string text4;
+    [SerializeField]
+    string person0;
+    [SerializeField, Multiline(2)]
+    string text0;
+    [SerializeField]
+    string person1;
+    [SerializeField, Multiline(2)]
+    string text1;
+    [SerializeField]
+    string person2;
+    [SerializeField, Multiline(2)]
+    string text2;
+    [SerializeField]
+    string person3;
+    [SerializeField, Multiline(2)]
+    string text3;
+    [SerializeField]
+    string person4;
+    [SerializeField, Multiline(2)]
+    string text4;
+    [SerializeField]
     public string person5;
-    public string text5;
+    [SerializeField, Multiline(2)]
+    string text5;
     public string[] people;
     public string[] texts;
-
+    public int eventPoint;//フラグ進行用のイベントポイント
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

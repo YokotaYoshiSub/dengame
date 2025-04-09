@@ -16,6 +16,8 @@ public class PlayerFocus : MonoBehaviour
     public int textNum;//テキスト数
     public string[] texts;//会話テキスト
     public string[] people;//会話の話者
+    public bool isPrevented = false;
+    string preventDirection;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -62,10 +64,11 @@ public class PlayerFocus : MonoBehaviour
             positionY = -1.0f;
         }
         //座標はプレイヤーの見ている方向
-        transform.position = new Vector2(player.transform.position.x + positionX, player.transform.position.y + positionY); 
+        transform.position = new Vector2(player.transform.position.x + positionX / 2, player.transform.position.y + positionY / 2); 
         //Debug.Log(transform.position);
         
         //------------------------------------イベントについての記述----------------------------------
+        
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -95,6 +98,41 @@ public class PlayerFocus : MonoBehaviour
             {
                 people[i] = eventCnt.people[i];
                 //Debug.Log(texts[i]);
+            }
+        }
+
+        //---------------------------今は先に進めない場所-------------------------------
+        if (other.gameObject.tag == "Prevent")
+        {
+            EventProtector eventProtector = other.GetComponent<EventProtector>();
+            preventDirection = eventProtector.awayDirection;
+
+
+            //何かしゃべる。例えば「まだやることがあった」
+            //texts配列を初期化
+            texts = new string[1];
+            //テキスト情報を配列に収納
+            texts[0] = eventProtector.text;
+            //people配列を初期化
+            people = new string[1];
+            //テキスト情報を配列に収納
+            people[0] = eventProtector.person;
+            
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "Prevent")
+        {
+            Debug.Log(other.gameObject.tag);
+            if (preventDirection == "up")
+            {
+                //下に行かせないようにプレイヤーを上方向に動かす
+                if (Input.GetKey(KeyCode.DownArrow))
+                {
+                    isPrevented = true;
+                }
             }
         }
     }

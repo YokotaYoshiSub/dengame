@@ -10,6 +10,8 @@ TagManager:
   - Block
   - Damage2
   - Damage3
+  - Prevent
+  - Item
   layers:
   - Default
   - TransparentFX
