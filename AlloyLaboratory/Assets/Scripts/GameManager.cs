@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public GameObject informationPanel;//左端の情報パネル
     public Image charaIcon;//操作キャラクターのアイコン
     public Sprite chara1;//誰かのアイコン画像
+    public bool isPanelOn = true;//パネルを表示するかどうか
     //hp処理
     public Image hp1;
     public Image hp2;
@@ -35,7 +36,7 @@ public class GameManager : MonoBehaviour
     GameObject playerFocus;//プレイヤーの目線
     PlayerFocus playerFocusCS;//PlayerFocusスクリプト
     //イベントのフラグ
-    public static int eventPoint = 0;//この数値を切り替えることでイベント進行
+    public static int eventProgress = 0;//この数値を切り替えることでイベント進行
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -46,6 +47,15 @@ public class GameManager : MonoBehaviour
         titleBackButton.SetActive(false);//最初は表示しない
         menuPanel.SetActive(false);//最初は表示しない
 
+        if (isPanelOn)
+        {
+            informationPanel.SetActive(true);//情報パネル表示
+        }
+        else
+        {
+            informationPanel.SetActive(false);//情報パネル非表示
+        }
+
         player = GameObject.FindGameObjectWithTag("Player");//プレイヤーを取得
         playerCnt = player.GetComponent<PlayerController>();//プレイヤーコントローラーを取得
         playerFocus = GameObject.FindGameObjectWithTag("PlayerFocus");//プレイヤーの目線を取得
@@ -55,6 +65,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(eventProgress);
         //---------------------------会話イベント-------------------------------
         if (playerFocusCS.eventFlag == true)
         {
@@ -69,6 +80,7 @@ public class GameManager : MonoBehaviour
                     textPanel.SetActive(true);//テキストボックス表示
                     nameText.GetComponent<Text>().text = playerFocusCS.people[0];//配列の1番目の名前を表示
                     chatText.GetComponent<Text>().text = playerFocusCS.texts[0];//配列の1番目のテキストを表示
+                    
                     chatNum = 1;//1番目の会話終了
                 }
             }
@@ -82,6 +94,7 @@ public class GameManager : MonoBehaviour
                     nameText.GetComponent<Text>().text = null;//名前をなにもなしに
                     chatText.GetComponent<Text>().text = null;//テキストをなにもなしに
                     textPanel.SetActive(false);//テキストボックス非表示
+                    eventProgress += playerFocusCS.eventProgress;//ものによってはイベント進行
                     chatNum = 0;//会話していない状態に変更
                 }
             }
@@ -97,8 +110,9 @@ public class GameManager : MonoBehaviour
                 }
             }
         }
+        //アイテムを取得した時
 
-        //まだ先に進めないところに行こうとしたときに引き留める
+        //------------------まだ先に進めないところに行こうとしたときに引き留める--------------------------
         if (playerFocusCS.isPrevented)
         {
             Time.timeScale = 0;//ゲームストップ
@@ -114,7 +128,7 @@ public class GameManager : MonoBehaviour
                 nameText.GetComponent<Text>().text = null;//名前をなにもなしに
                 chatText.GetComponent<Text>().text = null;//テキストをなにもなしに
                 textPanel.SetActive(false);//テキストボックス非表示
-                playerFocusCS.isPrevented = false;
+                playerFocusCS.isPrevented = false;//動かせる状態に
             }
         }
 

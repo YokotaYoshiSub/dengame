@@ -11,6 +11,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TitleScene.unity
     guid: 9a459ea490cb1af499825922d2599008
+  - enabled: 1
+    path: Assets/Scenes/RinoPast.unity
+    guid: e9534f26297c91246831646166ea48db
+  - enabled: 1
+    path: Assets/Scenes/RinoRoom.unity
+    guid: f4a1ef6b5b4270644aaa93f3ea6de126
+  - enabled: 1
+    path: Assets/Scenes/RinoHomeFront.unity
+    guid: dd8a290306a1dcd4f84d5b489692b8db
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 3590b91b4603b465dbb4216d601bff33, type: 3}
   m_UseUCBPForAssetBundles: 0

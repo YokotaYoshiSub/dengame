@@ -101,13 +101,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ad1ff89eb7ce2442b5658560ec40e80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textNum: 3
+  textNum: 1
   person0: "\u3088\u3053\u305F"
   text0: "\u3053\u3093\u306B\u3061\u306F"
-  person1: "\u3088\u3053\u305F"
-  text1: "\u308F\u305F\u3057\u306E\u540D\u524D\u306F"
-  person2: "\u3088\u3053\u305F"
-  text2: "\u3088\u3053\u305F\u3067\u3059"
+  person1: 
+  text1: 
+  person2: 
+  text2: 
   person3: 
   text3: 
   person4: 
@@ -116,6 +116,7 @@ MonoBehaviour:
   text5: 
   people: []
   texts: []
+  eventPoint: 0
 --- !u!61 &4943746111211744566
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -160,5 +161,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.6, y: 0.6}
-  m_EdgeRadius: 0.2
+  m_Size: {x: 1, y: 1}
+  m_EdgeRadius: 0

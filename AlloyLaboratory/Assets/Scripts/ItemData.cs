@@ -1,7 +1,11 @@
 using UnityEngine;
 
-public class ItemKeeper : MonoBehaviour
+public class ItemData : MonoBehaviour
 {
+    public static string[] itemData;
+
+    //ここに所持アイテムを保存して、このスクリプトを参照する
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
