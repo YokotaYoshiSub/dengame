@@ -6,7 +6,7 @@ public class EventProtector : MonoBehaviour
     public string person;
     [Multiline(2)]
     public string text;
-    public int eventProgress;//GameManager.eventProgressがこの値より大きければ＝必要なイベントをこなしたらオブジェクトを破壊
+    public int eventProgressDestroy;//GameManager.eventProgressがこの値より大きければ＝必要なイベントをこなしたらオブジェクトを破壊
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -17,7 +17,7 @@ public class EventProtector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (GameManager.eventProgress >= eventProgress)
+        if (GameManager.eventProgress >= eventProgressDestroy)
         {
             Destroy(gameObject);
         }

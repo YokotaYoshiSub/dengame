@@ -13,7 +13,7 @@ public class PlayerFocus : MonoBehaviour
     float positionY = 0.0f;
     GameObject player;//プレイヤー
     PlayerController playerCnt;//プレイヤーコントローラー
-    public int eventProgress = 0;//イベント進行
+    public int eventProgressGetPoint = 0;//イベント進行
     //----------------------------会話イベント------------------------------
     EventController eventCnt;//イベントコントローラー
     public bool eventFlag = false;//会話イベントに入れる状態かどうか
@@ -123,8 +123,8 @@ public class PlayerFocus : MonoBehaviour
             //texts配列を初期化
             texts = new string[textNum];
             //eventProgressChangeを取得
-            eventProgress = eventCnt.eventProgressChange;
-            Debug.Log(eventProgress);
+            eventProgressGetPoint = eventCnt.eventProgressGetPoint;
+            Debug.Log(eventProgressGetPoint);
             //テキスト情報を配列に収納
             for (int i = 0; i < textNum; i++)
             {
@@ -184,7 +184,7 @@ public class PlayerFocus : MonoBehaviour
             //プレイヤーがイベント相手から目をそらしたら
             //イベントに入れない状態にする
             eventFlag = false;
-            eventProgress = 0;//eventProgressが動かないように
+            eventProgressGetPoint = 0;//eventProgressが動かないように
         }
         //取得したイベントコントローラーを捨てる
         eventCnt = null;

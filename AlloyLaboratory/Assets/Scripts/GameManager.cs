@@ -56,6 +56,12 @@ public class GameManager : MonoBehaviour
             informationPanel.SetActive(false);//情報パネル非表示
         }
 
+        //eventProgressの値によって操作キャラの画像を帰る
+        if (eventProgress <= 100)
+        {
+            charaIcon.sprite = chara1;
+        }
+
         player = GameObject.FindGameObjectWithTag("Player");//プレイヤーを取得
         playerCnt = player.GetComponent<PlayerController>();//プレイヤーコントローラーを取得
         playerFocus = GameObject.FindGameObjectWithTag("PlayerFocus");//プレイヤーの目線を取得
@@ -94,7 +100,7 @@ public class GameManager : MonoBehaviour
                     nameText.GetComponent<Text>().text = null;//名前をなにもなしに
                     chatText.GetComponent<Text>().text = null;//テキストをなにもなしに
                     textPanel.SetActive(false);//テキストボックス非表示
-                    eventProgress += playerFocusCS.eventProgress;//ものによってはイベント進行
+                    eventProgress += playerFocusCS.eventProgressGetPoint;//ものによってはイベント進行
                     chatNum = 0;//会話していない状態に変更
                 }
             }

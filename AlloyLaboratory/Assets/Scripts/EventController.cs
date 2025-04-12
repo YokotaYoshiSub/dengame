@@ -60,8 +60,8 @@ public class EventController : MonoBehaviour
     string text15;
     public string[] people;
     public string[] texts;
-    public int eventProgress;//フラグ進行用のイベントポイント
-    public int eventProgressChange;//この会話をおこなうことでeventProgressがどれだけ変化するか
+    public int eventProgressJunction;//フラグ進行用のイベントポイント
+    public int eventProgressGetPoint;//この会話をおこなうことでeventProgressがどれだけ変化するか
     bool eventChange = false;//テキスト切り替えのフラグ
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -94,10 +94,10 @@ public class EventController : MonoBehaviour
             Debug.Log(eventProgressChange);
         }
         */
-        if (isTextChange && GameManager.eventProgress >= eventProgress)
+        if (isTextChange && GameManager.eventProgress >= eventProgressJunction)
         {
             eventChange = true;//イベント切り替え
-            eventProgressChange = 0;//これ以上は変化しない
+            eventProgressGetPoint = 0;//これ以上は変化しない
         }
         if (eventChange)
         {

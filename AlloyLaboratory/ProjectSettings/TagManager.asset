@@ -12,6 +12,7 @@ TagManager:
   - Damage3
   - Prevent
   - Item
+  - LoadPoint
   layers:
   - Default
   - TransparentFX

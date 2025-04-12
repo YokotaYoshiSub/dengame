@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     //------------------------カメラ関係-----------------------
     GameObject mainCamera;
     CameraController cameraCnt;
+    //---------------------イベント関係-----------------------
+    public static bool eventOnStart;
 
     // Start is called before the first frame update
     void Start()
@@ -341,8 +343,14 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(Dead());
             
         }
+    }
 
-        
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.tag == "LoadPoint")
+        {
+            eventOnStart = other.GetComponent<LoadSceneManager>().eventOnStart;//シーン移動先でイベントから始まるかどうか
+        }
     }
 }
     

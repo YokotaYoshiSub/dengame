@@ -273,7 +273,8 @@ MonoBehaviour:
   gameState: playing
   informationPanel: {fileID: 5604628053072055651}
   charaIcon: {fileID: 3067536941312321984}
-  chara1: {fileID: 0}
+  chara1: {fileID: -1044771548965059383, guid: 9f374eb3baa743e4f9310ab3859a9de5, type: 3}
+  isPanelOn: 1
   hp1: {fileID: 7036788080540194679}
   hp2: {fileID: 1865867983529595380}
   hp3: {fileID: 5173649930735564473}
