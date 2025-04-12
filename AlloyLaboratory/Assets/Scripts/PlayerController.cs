@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour
 
     public bool isMoving = false;//移動中かどうか
     public bool isCoroutineWorking = false;//コルーチン中かどうか
-    public bool onEvent = false;//イベント状態かどうか
     bool isRight = false;//右方向コルーチン開始フラグ
     bool isLeft = false;//左方向コルーチン開始フラグ
     bool isUp = false;//上方向コルーチン開始フラグ
@@ -29,7 +28,10 @@ public class PlayerController : MonoBehaviour
     GameObject mainCamera;
     CameraController cameraCnt;
     //---------------------イベント関係-----------------------
-    public static bool eventOnStart;
+    
+    public bool onEvent = false;//イベント状態かどうか
+
+    //public static bool eventOnStart;
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +41,7 @@ public class PlayerController : MonoBehaviour
         hp = maxHp;
         mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         cameraCnt = mainCamera.GetComponent<CameraController>();
+
     }
 
     // Update is called once per frame
@@ -46,6 +49,11 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         //Debug.Log(new Vector2(axisH, axisV));
+        //Debug.Log(onEvent);
+        if (Input.GetKey(KeyCode.RightShift))
+        {
+            onEvent = false;//右シフトを押したらイベント状態解除
+        }
 
         if (hp <= 0)
         {
@@ -345,13 +353,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.gameObject.tag == "LoadPoint")
-        {
-            eventOnStart = other.GetComponent<LoadSceneManager>().eventOnStart;//シーン移動先でイベントから始まるかどうか
-        }
-    }
+    
 }
     
     

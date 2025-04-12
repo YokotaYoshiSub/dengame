@@ -24,7 +24,7 @@ public class LoadSceneManager : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            LoadScene();
+            Invoke("LoadScene", 0.1f);
         }
     }
 

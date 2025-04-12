@@ -26,6 +26,8 @@ public class PlayerFocus : MonoBehaviour
     //-----------------------------まだ通れないところ------------------------
     public bool isPrevented = false;
     string preventDirection;
+    //------------------------------シーンの移動関係--------------------
+    public static bool eventOnStart;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -35,6 +37,7 @@ public class PlayerFocus : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player");
         //プレイヤーコントローラーを取得
         playerCnt = player.GetComponent<PlayerController>();
+        playerCnt.onEvent = eventOnStart;//イベントに入るかどうか
     }
 
     // Update is called once per frame
@@ -106,6 +109,13 @@ public class PlayerFocus : MonoBehaviour
             //テキスト情報を配列に収納
             people[0] = eventProtector.person;
             
+        }
+
+        //-----------------------------シーンの移動--------------------------------
+        
+        if (other.gameObject.tag == "LoadPoint")
+        {
+            eventOnStart = other.GetComponent<LoadSceneManager>().eventOnStart;//シーン移動先でイベントから始まるかどうか
         }
     }
 
