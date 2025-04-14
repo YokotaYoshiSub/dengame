@@ -6576,6 +6576,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1561539114180268040, guid: e229861b1f83a744bb27aecd4b544eb7, type: 3}
+      propertyPath: text0
+      value: "\u304A\u306F\u3088\u3001\u5BDD\u3050\u305B\u3084\u3063\u3070\u3044\u306D"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561539114180268040, guid: e229861b1f83a744bb27aecd4b544eb7, type: 3}
+      propertyPath: text1
+      value: "\u3054\u3081\u3093\u304A\u5F85\u305F\u305B\uFF01\u5BDD\u3050\u305B\u306F\u5F8C\u3067\u76F4\u3059\uFF01"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561539114180268040, guid: e229861b1f83a744bb27aecd4b544eb7, type: 3}
+      propertyPath: text2
+      value: "\u3042\u3068\u4E94\u5206\u3060\u3088\u96FB\u8ECA\uFF01\u30C0\u30C3\u30B7\u30E5\uFF01"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561539114180268040, guid: e229861b1f83a744bb27aecd4b544eb7, type: 3}
+      propertyPath: text3
+      value: "\u3046\u3078\u3047\uFF5E"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561539114180268040, guid: e229861b1f83a744bb27aecd4b544eb7, type: 3}
+      propertyPath: person0
+      value: "\u30B7\u30EA\u30AB"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561539114180268040, guid: e229861b1f83a744bb27aecd4b544eb7, type: 3}
+      propertyPath: person1
+      value: "\u30EA\u30CE"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561539114180268040, guid: e229861b1f83a744bb27aecd4b544eb7, type: 3}
+      propertyPath: person2
+      value: "\u30B7\u30EA\u30AB"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561539114180268040, guid: e229861b1f83a744bb27aecd4b544eb7, type: 3}
+      propertyPath: person3
+      value: "\u30EA\u30CE"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561539114180268040, guid: e229861b1f83a744bb27aecd4b544eb7, type: 3}
+      propertyPath: textNum
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1561539114180268040, guid: e229861b1f83a744bb27aecd4b544eb7, type: 3}
+      propertyPath: eventOnStart
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6231967622669917043, guid: e229861b1f83a744bb27aecd4b544eb7, type: 3}
       propertyPath: m_Name
       value: LoadScene

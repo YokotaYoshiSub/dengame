@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 1060029462}
   m_Layer: 0
   m_Name: LoadScene
-  m_TagString: Untagged
+  m_TagString: LoadPoint
   m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -196,6 +196,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: SampleScene
+  eventOnStart: 0
+  textNum: 0
+  person0: 
+  text0: 
+  person1: 
+  text1: 
+  person2: 
+  text2: 
+  person3: 
+  text3: 
+  person4: 
+  text4: 
+  person5: 
+  text5: 
+  person6: 
+  text6: 
 --- !u!4 &1060029464
 Transform:
   m_ObjectHideFlags: 0
@@ -422,6 +438,7 @@ MonoBehaviour:
   awayDirection: right
   person: "\u30B7\u30EA\u30AB"
   text: "\u305D\u3063\u3061\u3058\u3083\u306A\u3044\u3067\u3057\u3087\uFF01"
+  eventProgressDestroy: 0
 --- !u!1001 &1836561250
 PrefabInstance:
   m_ObjectHideFlags: 0

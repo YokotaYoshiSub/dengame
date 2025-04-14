@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 1060029462}
   m_Layer: 0
   m_Name: LoadScene
-  m_TagString: Untagged
+  m_TagString: LoadPoint
   m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -196,6 +196,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: RinoRoom
+  eventOnStart: 1
+  textNum: 7
+  person0: "\u30EA\u30CE"
+  text0: "\u3042\u3001\u3042\u3041\u3001\u304A\u306F\u3088"
+  person1: "\u30EA\u30CE\u6BCD"
+  text1: "\u3082\u3046\u5927\u5B664\u5E74\u3067\u3057\u3087\n\u3044\u3044\u52A0\u6E1B\u81EA\u5206\u3067\u8D77\u304D\u308C\u308B\u3088\u3046\u306B\u306A\u308A\u306A\u3055\u3044"
+  person2: "\u30EA\u30CE\u6BCD"
+  text2: "?\u4F55\u5909\u306A\u5922\u3067\u3082\u898B\u305F\u306E"
+  person3: "\u30EA\u30CE"
+  text3: "\u306F\u3001\u3044\u3084\u3001\u305D\u3093\u306A\u3093\u3058\u3083\u306A\u3044\u3057\n\uFF08\u2026\u898B\u305F\u3051\u3069\uFF09"
+  person4: "\u30EA\u30CE\u6BCD"
+  text4: "\u30B7\u30EA\u30AB\u3061\u3083\u3093\u3001\u3082\u3046\u6765\u3066\u308B\u3088\u3002\u7384\u95A2"
+  person5: "\u30EA\u30CE"
+  text5: "\u30DE\u30B8?"
+  person6: "\u30EA\u30CE\u6BCD"
+  text6: "\u30DE\u30B8\u30DE\u30B8\u3001\u3055\u3063\u3055\u3068\u6E96\u5099\u3057\u306A!"
 --- !u!4 &1060029464
 Transform:
   m_ObjectHideFlags: 0
@@ -422,7 +438,7 @@ MonoBehaviour:
   awayDirection: right
   person: "\u30B7\u30EA\u30AB"
   text: "\u305D\u3063\u3061\u3058\u3083\u306A\u3044\u3067\u3057\u3087\uFF01"
-  eventProgress: 0
+  eventProgressDestroy: 0
 --- !u!1001 &1836561250
 PrefabInstance:
   m_ObjectHideFlags: 0

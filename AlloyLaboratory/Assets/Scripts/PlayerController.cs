@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {   
+    //操作キャラクターの動きに関する部分を主に担当する
+
     private Rigidbody2D rb2d;
     public float speed = 5.0f;//歩きスピード
     float axisH = 0.0f;//左右入力離散値
@@ -29,7 +31,7 @@ public class PlayerController : MonoBehaviour
     CameraController cameraCnt;
     //---------------------イベント関係-----------------------
     
-    public bool onEvent = false;//イベント状態かどうか
+    public bool onEvent = false;//イベント状態かどうか。できればPlayerFocusのほうにまとめたい
 
     //public static bool eventOnStart;
 
@@ -50,10 +52,7 @@ public class PlayerController : MonoBehaviour
     {
         //Debug.Log(new Vector2(axisH, axisV));
         //Debug.Log(onEvent);
-        if (Input.GetKey(KeyCode.RightShift))
-        {
-            onEvent = false;//右シフトを押したらイベント状態解除
-        }
+        
 
         if (hp <= 0)
         {

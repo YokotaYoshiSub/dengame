@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerFocus : MonoBehaviour
 {
+    //プレイヤーの関与するイベントを主に担当する
+    //-----------------------位置に関する情報--------------------------
     float amptitude = 0.02f;
     float time = 0f;
     float delta;
@@ -13,13 +15,19 @@ public class PlayerFocus : MonoBehaviour
     float positionY = 0.0f;
     GameObject player;//プレイヤー
     PlayerController playerCnt;//プレイヤーコントローラー
-    public int eventProgressGetPoint = 0;//イベント進行
+    
     //----------------------------会話イベント------------------------------
+    public int eventProgressGetPoint = 0;//イベント進行
     EventController eventCnt;//イベントコントローラー
     public bool eventFlag = false;//会話イベントに入れる状態かどうか
     public int textNum;//テキスト数
     public string[] texts;//会話テキスト
     public string[] people;//会話の話者
+    public bool textsProtect = false;
+    //ロード中にテキストを保存
+    public static int textNumStatic;
+    public static string[] textsStatic;
+    public static string[] peopleStatic;
     //---------------------------アイテムの取得------------------------------
     EventItemController eventItemCnt;//アイテムコントローラー
     
@@ -29,15 +37,37 @@ public class PlayerFocus : MonoBehaviour
     //------------------------------シーンの移動関係--------------------
     public static bool eventOnStart;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
+        textNum = textNumStatic;
+        texts = new string[textNum];
+        people = new string[textNum];
+
+        for (int i = 0; i < textNumStatic; i++)
+        {
+            texts[i] = textsStatic[i];
+            //Debug.Log(texts[i]);
+        }
+        for (int i = 0; i < textNumStatic; i++)
+        {
+            people[i] = peopleStatic[i];
+        }
+        textsProtect = false;
         
         //プレイヤーを取得
         player = GameObject.FindGameObjectWithTag("Player");
         //プレイヤーコントローラーを取得
         playerCnt = player.GetComponent<PlayerController>();
+
         playerCnt.onEvent = eventOnStart;//イベントに入るかどうか
+        //Debug.Log(eventOnStart);
+    }
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        
+        
     }
 
     // Update is called once per frame
@@ -83,6 +113,20 @@ public class PlayerFocus : MonoBehaviour
         
         //------------------------------------イベントについての記述----------------------------------
         //Debug.Log(eventProgress);
+        if (textsProtect)
+        {
+            textNumStatic = textNum;
+            textsStatic = new string[textNumStatic];
+            peopleStatic = new string[textNumStatic];
+            for (int i = 0; i < textNum; i++)
+            {
+                textsStatic[i] = texts[i];
+            }
+            for (int i = 0; i < textNum; i++)
+            {
+                peopleStatic[i] = people[i];
+            }
+        }
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -116,6 +160,7 @@ public class PlayerFocus : MonoBehaviour
         if (other.gameObject.tag == "LoadPoint")
         {
             eventOnStart = other.GetComponent<LoadSceneManager>().eventOnStart;//シーン移動先でイベントから始まるかどうか
+            //Debug.Log(eventOnStart);
         }
     }
 
@@ -134,7 +179,7 @@ public class PlayerFocus : MonoBehaviour
             texts = new string[textNum];
             //eventProgressChangeを取得
             eventProgressGetPoint = eventCnt.eventProgressGetPoint;
-            Debug.Log(eventProgressGetPoint);
+            //Debug.Log(eventProgressGetPoint);
             //テキスト情報を配列に収納
             for (int i = 0; i < textNum; i++)
             {
