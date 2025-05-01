@@ -13,6 +13,7 @@ TagManager:
   - Prevent
   - Item
   - LoadPoint
+  - SavePoint
   layers:
   - Default
   - TransparentFX

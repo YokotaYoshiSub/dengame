@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
     
     //---------------------メニューパネル
     public GameObject menuPanel;
+    //----------------------セーブデータパネル
+    public GameObject saveDatasPanel;
     //--------------------その他-------------------------
 
     GameObject player;//プレイヤー
@@ -46,8 +48,10 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        textPanel.SetActive(false);//最初はテキストボックスは非表示
-        menuPanel.SetActive(false);//最初は表示しない
+        //最初は非表示のもの
+        textPanel.SetActive(false);
+        menuPanel.SetActive(false);
+        saveDatasPanel.SetActive(false);
 
         if (isPanelOn)
         {
@@ -197,6 +201,20 @@ public class GameManager : MonoBehaviour
         }
         //アイテムを取得した時
 
+        //----------------------------------セーブポイント-----------------------------------
+        if (playerFocusCS.isSaveReady)
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                Time.timeScale = 0;//ゲーム停止
+                textPanel.SetActive(true);//テキスト表示
+                saveDatasPanel.SetActive(true);//セーブデータ表示
+                nameText.GetComponent<Text>().text = "SAVEPOINT";
+                chatText.GetComponent<Text>().text = "Save as...";
+
+            }
+        }
+
         //------------------まだ先に進めないところに行こうとしたときに引き留める--------------------------
         if (playerFocusCS.isPrevented)
         {
@@ -318,4 +336,19 @@ public class GameManager : MonoBehaviour
         isTextComposing = false;
     }
 
+    //セーブ画面を閉じる
+    public void CloseSavePanel()
+    {
+        saveDatasPanel.SetActive(false);
+        Time.timeScale = 1;
+        nameText.GetComponent<Text>().text = null;
+        chatText.GetComponent<Text>().text = null;
+        textPanel.SetActive(false);
+    }
+
+    //セーブする
+    public void SaveData()
+    {
+        PlayerPrefs.SetInt("", 1);
+    }
 }

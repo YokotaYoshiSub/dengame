@@ -5,6 +5,7 @@ using UnityEngine;
 public class EventController : MonoBehaviour
 {
     public bool isTextChange = false;//イベントの切り替えがあるかどうか
+    public bool isSavePoint = false;//ここでセーブできるかどうか
     
     //-----------------------イベント進行前のテキスト
     public int textNum = 6;//テキストの個数

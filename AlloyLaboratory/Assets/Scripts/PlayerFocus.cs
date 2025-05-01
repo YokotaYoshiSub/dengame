@@ -30,6 +30,8 @@ public class PlayerFocus : MonoBehaviour
     public static string[] peopleStatic;
     //---------------------------アイテムの取得------------------------------
     EventItemController eventItemCnt;//アイテムコントローラー
+    //---------------------------セーブ関連---------------------
+    public bool isSaveReady = false;
     
     //-----------------------------まだ通れないところ------------------------
     public bool isPrevented = false;
@@ -196,6 +198,14 @@ public class PlayerFocus : MonoBehaviour
             }
         }
 
+        if (other.gameObject.tag == "SavePoint")
+        {
+            //プレイヤーがセーブポイントを見ていたら
+            //セーブができる状態である
+            isSaveReady = true;
+            
+        }
+
         if (other.gameObject.tag == "Prevent")
         {
             if (preventDirection == "down")
@@ -240,6 +250,10 @@ public class PlayerFocus : MonoBehaviour
             //イベントに入れない状態にする
             eventFlag = false;
             eventProgressGetPoint = 0;//eventProgressが動かないように
+        }
+        if (other.gameObject.tag == "SavePoint")
+        {
+            isSaveReady = false;//セーブできない状態
         }
         //取得したイベントコントローラーを捨てる
         eventCnt = null;
