@@ -211,7 +211,6 @@ public class GameManager : MonoBehaviour
                 saveDatasPanel.SetActive(true);//セーブデータ表示
                 nameText.GetComponent<Text>().text = "SAVEPOINT";
                 chatText.GetComponent<Text>().text = "Save as...";
-
             }
         }
 
@@ -346,9 +345,5 @@ public class GameManager : MonoBehaviour
         textPanel.SetActive(false);
     }
 
-    //セーブする
-    public void SaveData()
-    {
-        PlayerPrefs.SetInt("", 1);
-    }
+    
 }

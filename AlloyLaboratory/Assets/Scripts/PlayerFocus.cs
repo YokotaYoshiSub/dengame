@@ -32,6 +32,10 @@ public class PlayerFocus : MonoBehaviour
     EventItemController eventItemCnt;//アイテムコントローラー
     //---------------------------セーブ関連---------------------
     public bool isSaveReady = false;
+    int savePosX;
+    int savePosY;
+    int saveSceneNum;
+    public int savePoint;
     
     //-----------------------------まだ通れないところ------------------------
     public bool isPrevented = false;
@@ -204,6 +208,10 @@ public class PlayerFocus : MonoBehaviour
             //セーブができる状態である
             isSaveReady = true;
             
+            savePosX = other.GetComponent<SavePointManager>().savePosX;
+            savePosY = other.GetComponent<SavePointManager>().savePosY;
+            saveSceneNum = other.GetComponent<SavePointManager>().saveSceneNum;
+            savePoint = 100 * savePosX + 10 * savePosY + saveSceneNum;
         }
 
         if (other.gameObject.tag == "Prevent")

@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class SavePointManager : MonoBehaviour
 {
-    public float savePosX;
-    public float savePosY;
-    public int sceneNum;
+    public int savePosX;
+    public int savePosY;
+    public int saveSceneNum;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
