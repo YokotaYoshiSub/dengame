@@ -6,10 +6,13 @@ using UnityEngine.UI;
 public class TitleManager : MonoBehaviour
 {
     public GameObject saveDatasPanel;
+    public GameObject optionPanel;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         saveDatasPanel.SetActive(false);
+        optionPanel.SetActive(false);
     }
 
     // Update is called once per frame
@@ -18,8 +21,23 @@ public class TitleManager : MonoBehaviour
         
     }
 
-    public void showSaveDatasPanel()
+    public void openSaveDatasPanel()
     {
         saveDatasPanel.SetActive(true);
+    }
+
+    public void closeSaveDatasPanel()
+    {
+        saveDatasPanel.SetActive(false);
+    }
+
+    public void openOptionPanel()
+    {
+        optionPanel.SetActive(true);
+    }
+
+    public void closeOptionPanel()
+    {
+        optionPanel.SetActive(false);
     }
 }
