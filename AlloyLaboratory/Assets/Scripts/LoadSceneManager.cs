@@ -47,7 +47,11 @@ public class LoadSceneManager : MonoBehaviour
     void Start()
     {
         playerFocus = GameObject.FindGameObjectWithTag("PlayerFocus");
-        playerFocusCS = playerFocus.GetComponent<PlayerFocus>();
+        if (playerFocus != null)
+        {
+            playerFocusCS = playerFocus.GetComponent<PlayerFocus>();
+        }
+        
 
 
         //texts配列、people配列を初期化

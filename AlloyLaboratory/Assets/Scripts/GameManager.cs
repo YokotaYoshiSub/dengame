@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -28,10 +29,7 @@ public class GameManager : MonoBehaviour
     //float textOrderingTime;//テキストを表示させる時間
     bool isTextDisplaying = false;//テキスト表示中かどうか
     bool isTextComposing = false;//テキストが生成中かどうか
-    //-----------------ゲームオーバー処理---------------------
-    float time = 0f;
-    public GameObject gameOverPanel;
-    public GameObject titleBackButton;//タイトル画面に戻れるように
+    
     //---------------------メニューパネル
     public GameObject menuPanel;
     //--------------------その他-------------------------
@@ -42,14 +40,13 @@ public class GameManager : MonoBehaviour
     PlayerFocus playerFocusCS;//PlayerFocusスクリプト
     //イベントのフラグ
     public static int eventProgress = 0;//この数値を切り替えることでイベント進行
+    float debugTime = 0f;
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         textPanel.SetActive(false);//最初はテキストボックスは非表示
-        gameOverPanel.SetActive(false);//最初はゲームオーバー画面を見せない
-        titleBackButton.SetActive(false);//最初は表示しない
         menuPanel.SetActive(false);//最初は表示しない
 
         if (isPanelOn)
@@ -81,6 +78,7 @@ public class GameManager : MonoBehaviour
         //---------------------------会話イベント-------------------------------
 
         //Debug.Log(chatNum);
+
 
         if (playerCnt.onEvent == true)
         {
@@ -256,26 +254,14 @@ public class GameManager : MonoBehaviour
         }
         else 
         {
+            //体力0=ゲームオーバー
+            debugTime += Time.deltaTime;
+            Debug.Log(debugTime);
             hp1.gameObject.SetActive(false);
             hp2.gameObject.SetActive(false);
             hp3.gameObject.SetActive(false);
-        }
-
-        //-------------------------ゲームオーバー処理----------------------------
-        if (PlayerController.hp <= 0)
-        {
-            //プレイヤーの体力が0を下回ったら
             Invoke("GameOver", 1.0f);
             gameState = "gameOver";
-        }
-        if (gameState == "gameOver")
-        {
-            time += Time.deltaTime;
-            if (time >= 2.0f)
-            {
-                //タイトルに戻れるように
-                titleBackButton.SetActive(true);
-            }
         }
     }
 
@@ -287,7 +273,7 @@ public class GameManager : MonoBehaviour
     //ゲームオーバーメソッド
     void GameOver()
     {
-        gameOverPanel.SetActive(true);
+        SceneManager.LoadScene("GameOver");
     }
 
     //-----------------------テキスト送りコルーチン
@@ -331,4 +317,5 @@ public class GameManager : MonoBehaviour
         chatText.GetComponent<Text>().text = text;
         isTextComposing = false;
     }
+
 }
