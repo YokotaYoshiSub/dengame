@@ -324,12 +324,28 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4267991979218237410, guid: a69b378297872cb4c82ca737a42611af, type: 3}
+      propertyPath: blackTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4267991979218237410, guid: a69b378297872cb4c82ca737a42611af, type: 3}
       propertyPath: isActiveOnStart
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4931122540035391407, guid: a69b378297872cb4c82ca737a42611af, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5585077989107088741, guid: a69b378297872cb4c82ca737a42611af, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5585077989107088741, guid: a69b378297872cb4c82ca737a42611af, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5694706151893306729, guid: a69b378297872cb4c82ca737a42611af, type: 3}
       propertyPath: isPanelOn
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8159501305920538884, guid: a69b378297872cb4c82ca737a42611af, type: 3}
       propertyPath: m_Text

@@ -30,8 +30,6 @@ public class GameManager : MonoBehaviour
     bool isTextDisplaying = false;//テキスト表示中かどうか
     bool isTextComposing = false;//テキストが生成中かどうか
     
-    //---------------------メニューパネル
-    public GameObject menuPanel;
     //----------------------セーブデータパネル
     public GameObject saveDatasPanel;
     //--------------------その他-------------------------
@@ -50,7 +48,6 @@ public class GameManager : MonoBehaviour
     {
         //最初は非表示のもの
         textPanel.SetActive(false);
-        menuPanel.SetActive(false);
         saveDatasPanel.SetActive(false);
 
         if (isPanelOn)
