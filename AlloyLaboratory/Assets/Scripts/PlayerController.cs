@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
     CameraController cameraCnt;
     //---------------------イベント関係-----------------------
     
-    public bool onEvent = false;//イベント状態かどうか。できればPlayerFocusのほうにまとめたい
+    //public bool onEvent = false;//イベント状態かどうか。できればPlayerFocusのほうにまとめたい
 
     //public static bool eventOnStart;
 
@@ -135,11 +135,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (onEvent)
-        {
-            //イベント中は移動しない
-            return;
-        }
+        
         if (hp <= 0)
         {
             //hpが0なら入力を受け付けない

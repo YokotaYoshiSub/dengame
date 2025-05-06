@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerFocus : MonoBehaviour
 {
     //プレイヤーの関与するイベントを主に担当する
+    
     //-----------------------位置に関する情報--------------------------
     float amptitude = 0.02f;
     float time = 0f;
@@ -43,8 +44,13 @@ public class PlayerFocus : MonoBehaviour
     //------------------------------シーンの移動関係--------------------
     public static bool eventOnStart;
 
-    void Awake()
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player");
+        
+        //会話イベント準備
         textNum = textNumStatic;
         texts = new string[textNum];
         people = new string[textNum];
@@ -59,21 +65,6 @@ public class PlayerFocus : MonoBehaviour
             people[i] = peopleStatic[i];
         }
         textsProtect = false;
-        
-        //プレイヤーを取得
-        player = GameObject.FindGameObjectWithTag("Player");
-        //プレイヤーコントローラーを取得
-        playerCnt = player.GetComponent<PlayerController>();
-
-        playerCnt.onEvent = eventOnStart;//イベントに入るかどうか
-        //Debug.Log(eventOnStart);
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-        
     }
 
     // Update is called once per frame

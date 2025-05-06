@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     //UIを担当
+    //主にパネルのONOFFを行う
+    //ONにしたら、そのあとは個別に処理する
     //float debugTime = 0;//デバッグ用のタイマー
     public string gameState = "playing";
     //------------------左端の情報パネル----------------------
@@ -21,14 +23,8 @@ public class GameManager : MonoBehaviour
     //----------------下端のテキストパネル---------------------
 
     public GameObject textPanel;//下端のテキストパネル
-    public Image speakerIcon;//話者アイコン
-    public Image textBox;//テキストボックス
-    public GameObject nameText;//名前
-    public GameObject chatText;//文章
-    int chatNum = 0;//会話の何番目のテキストか
-    //float textOrderingTime;//テキストを表示させる時間
-    bool isTextDisplaying = false;//テキスト表示中かどうか
-    bool isTextComposing = false;//テキストが生成中かどうか
+    bool isTextDisplaying;
+    TextPanelManager textPanelManager;
     
     //----------------------セーブデータパネル
     public GameObject saveDatasPanel;
@@ -47,8 +43,20 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         //最初は非表示のもの
-        textPanel.SetActive(false);
         saveDatasPanel.SetActive(false);
+
+        if (PlayerFocus.eventOnStart)
+        {
+            //シーン開始直後にイベント
+            textPanel.SetActive(true);
+            Time.timeScale = 0;
+        }
+        else
+        {
+            textPanel.SetActive(false);
+        }
+
+        textPanelManager = textPanel.GetComponent<TextPanelManager>();
 
         if (isPanelOn)
         {
@@ -74,128 +82,30 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(eventProgress);
+        Debug.Log(eventProgress);
 
-        //---------------------------会話イベント-------------------------------
-
-        //Debug.Log(chatNum);
-
-
+        /*
         if (playerCnt.onEvent == true)
         {
-            //シーン切り替え直後のイベント
-            if (chatNum == 0)
-            {
-                textPanel.SetActive(true);//テキストボックス表示
-                //nameText.GetComponent<Text>().text = playerFocusCS.people[0];//配列の1番目の名前を表示
-                
-                if (!isTextComposing && !isTextDisplaying)
-                {
-                    StartCoroutine(TextFlow(playerFocusCS.texts[0]));//配列の1番目のテキストを表示
-
-                    
-                }
-                if (!isTextComposing && isTextDisplaying)
-                {
-                    //テキスト生成終わりかつ
-                    //テキスト表示中
-                    if (Input.GetKeyDown(KeyCode.Return))
-                    {
-                        chatNum = 1;//1番目の会話終了
-                        isTextDisplaying = false;//次のテキストを生成できるように
-                    }
-                }
-                
-            }
-            else if (chatNum >= playerFocusCS.textNum)
-            {
-                //配列の最後の会話が終了したら
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    //Enterキーを押すと
-                    Time.timeScale = 1;//ゲーム再開
-                    playerCnt.onEvent = false;
-                    nameText.GetComponent<Text>().text = null;//名前をなにもなしに
-                    chatText.GetComponent<Text>().text = null;//テキストをなにもなしに
-                    textPanel.SetActive(false);//テキストボックス非表示
-                    chatNum = 0;//会話していない状態に変更
-                    //テキスト生成できるように
-                    isTextDisplaying = false;
-                    isTextComposing = false;
-                }
-            }
-            else if (chatNum >= 1)
-            {
-                //n回会話している＝テキストボックスが表示されているなら
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    //Enterキーを押すと
-                    nameText.GetComponent<Text>().text = playerFocusCS.people[chatNum];//配列のn+1番目の名前を表示
-
-                    if (!isTextComposing && !isTextDisplaying)
-                    {
-                        StartCoroutine(TextFlow(playerFocusCS.texts[chatNum]));//配列のn+1番目のテキストを表示
-                    }
-                    
-                }
-
-                if (isTextDisplaying && !isTextComposing)
-                {
-                    chatNum += 1;//n+1回目の会話終了
-                    isTextDisplaying = false; //次のテキストを生成できるように
-                }
-            }
-
+            textPanel.SetActive(true);//テキストボックス表示
+            
         }
-        
+        */
+        isTextDisplaying = textPanelManager.isTextDisplaying;
 
-
-        if (playerFocusCS.eventFlag == true)
+        if (playerFocusCS.eventFlag == true && isTextDisplaying == false)
         {
-            //プレイヤーの目線がキャラクターに重なっているとき
-            if (chatNum < playerFocusCS.textNum)
+            if (Input.GetKeyDown(KeyCode.Return))
             {
-                //会話途中
-                if(Input.GetKeyDown(KeyCode.Return))
-                {
-                    //Debug.Log(chatNum);
-                    //Enterキーを押すと
-                    Time.timeScale = 0;//ゲームストップ
-                    textPanel.SetActive(true);//テキストボックス表示
-                    nameText.GetComponent<Text>().text = playerFocusCS.people[chatNum];//配列の1番目の名前を表示
-                    
-                    if (!isTextDisplaying && !isTextComposing)
-                    {
-                        //テキスト非表示かつ
-                        //テキスト生成が進んでいなかったら
-
-                        StartCoroutine(TextFlow(playerFocusCS.texts[chatNum]));
-                    }
-                }
-
-                if (isTextDisplaying && !isTextComposing)
-                {
-                    //テキスト表示中で
-                    //テキスト生成が終わったら
-                    chatNum += 1;//1番目の会話終了
-                    isTextDisplaying = false;//つぎのテキストを生成できるように
-                }
+                //何かを調べたとき
+                textPanel.SetActive(true);//テキストボックス表示
+                textPanelManager.isTextDisplaying = true;
+                Time.timeScale = 0;
             }
-            else
-            {
-                //配列の最後の会話が終了したら
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    //Enterキーを押すと
-                    Time.timeScale = 1;//ゲーム再開
-                    nameText.GetComponent<Text>().text = null;//名前をなにもなしに
-                    chatText.GetComponent<Text>().text = null;//テキストをなにもなしに
-                    textPanel.SetActive(false);//テキストボックス非表示
-                    eventProgress += playerFocusCS.eventProgressGetPoint;//ものによってはイベント進行
-                    chatNum = 0;//会話していない状態に変更
-                }
-            }
+            
+            
         }
+
         //アイテムを取得した時
 
         //----------------------------------セーブポイント-----------------------------------
@@ -206,17 +116,18 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 0;//ゲーム停止
                 textPanel.SetActive(true);//テキスト表示
                 saveDatasPanel.SetActive(true);//セーブデータ表示
-                nameText.GetComponent<Text>().text = "SAVEPOINT";
-                chatText.GetComponent<Text>().text = "Save as...";
+                //nameText.GetComponent<Text>().text = "SAVEPOINT";
+                //chatText.GetComponent<Text>().text = "Save as...";
             }
         }
 
-        //------------------まだ先に進めないところに行こうとしたときに引き留める--------------------------
+        //------------------まだ先に進めないところに行こうとしたときに引き留める----------------------
+        /*
         if (playerFocusCS.isPrevented)
         {
             Time.timeScale = 0;//ゲームストップ
             textPanel.SetActive(true);//テキストボックス表示
-            nameText.GetComponent<Text>().text = playerFocusCS.people[0];//配列の1番目の名前を表示
+            ///nameText.GetComponent<Text>().text = playerFocusCS.people[0];//配列の1番目の名前を表示
             //debugTime += Time.deltaTime;
 
             //StartCoroutine(TextFlow(playerFocusCS.texts[0]));
@@ -227,7 +138,7 @@ public class GameManager : MonoBehaviour
                 //テキスト非表示かつ
                 //テキスト生成が進んでいなかったら
 
-                StartCoroutine(TextFlow(playerFocusCS.texts[0]));
+                //StartCoroutine(TextFlow(playerFocusCS.texts[0]));
             }
             
             
@@ -239,13 +150,14 @@ public class GameManager : MonoBehaviour
                 //Enterキーを押すと
                 
                 Time.timeScale = 1;//ゲーム再開
-                nameText.GetComponent<Text>().text = null;//名前をなにもなしに
-                chatText.GetComponent<Text>().text = null;//テキストをなにもなしに
+                //nameText.GetComponent<Text>().text = null;//名前をなにもなしに
+                //chatText.GetComponent<Text>().text = null;//テキストをなにもなしに
                 textPanel.SetActive(false);//テキストボックス非表示
                 isTextDisplaying = false;//テキストが非表示になった
                 playerFocusCS.isPrevented = false;//動かせる状態に
             }
         }
+        */
 
         //--------------------------体力処理---------------------------
         if (PlayerController.hp >= 3)
@@ -290,55 +202,15 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("GameOver");
     }
 
-    //-----------------------テキスト送りコルーチン
-    IEnumerator TextFlow(string text)
-    {
-        //0.02sにつき1文字ずつ表示させたい
-        //そのうえでEnterでスキップ、一瞬で表示
-        //全部表示させてからEnterでテキスト非表示
-        isTextDisplaying = true;
-        isTextComposing = true;
-        float textOrderingTime = 0f;
-
-        chatText.GetComponent<Text>().text = text.Substring(0);
-
-        while (true)
-        {
-            textOrderingTime += Time.unscaledDeltaTime;
-            //Debug.Log(textOrderingTime);
-            
-            for (int i = 0; i <= text.Length; i++)
-            {
-                if (textOrderingTime > 0.1f * (float)i)
-                {
-                    chatText.GetComponent<Text>().text = text.Substring(0, i);
-                }
-            }
-            
-            
-            yield return null;
-
-            if (textOrderingTime >= (float)text.Length*0.1f)
-            {
-                break;
-            }
-            if (Input.GetKeyDown(KeyCode.Return))
-            {
-                break;
-            }
-        }
-
-        chatText.GetComponent<Text>().text = text;
-        isTextComposing = false;
-    }
+    
 
     //セーブ画面を閉じる
     public void CloseSavePanel()
     {
         saveDatasPanel.SetActive(false);
         Time.timeScale = 1;
-        nameText.GetComponent<Text>().text = null;
-        chatText.GetComponent<Text>().text = null;
+        //nameText.GetComponent<Text>().text = null;
+        //chatText.GetComponent<Text>().text = null;
         textPanel.SetActive(false);
     }
 

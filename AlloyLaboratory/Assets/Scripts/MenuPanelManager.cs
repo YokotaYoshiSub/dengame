@@ -6,20 +6,20 @@ using System.Collections.Generic;
 public class MenuPanelManager : MonoBehaviour
 {
 
+    public GameObject itemPanel;
+    bool onoff = false;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        gameObject.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("a");
-        if (Input.GetKey(KeyCode.Return))
+        itemPanel.SetActive(onoff);
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("1");
-            gameObject.SetActive(true);
+            onoff = !onoff;
         }
     }
 }

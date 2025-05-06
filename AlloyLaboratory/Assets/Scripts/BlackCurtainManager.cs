@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class BlackCurtainManager : MonoBehaviour
 {
     //public bool isActiveOnStart;
-    public float blackTime;//暗闇が完全に晴れるまでの時間
+    public float blackTime = 1f;//暗闇が完全に晴れるまでの時間
     bool isFadingOut;
     float fadeOutTime = 1f;
     Image image;
@@ -29,7 +29,15 @@ public class BlackCurtainManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        blackTime -= Time.deltaTime;
+        if (Time.deltaTime > 0f)
+        {
+            blackTime -= Time.deltaTime;
+        }
+        else
+        {
+            blackTime -= Time.unscaledDeltaTime;
+        }
+
         
 
         if (blackTime > 0f && blackTime < fadeOutTime)
@@ -55,7 +63,14 @@ public class BlackCurtainManager : MonoBehaviour
         if (image.color.a >= 0)
         {
             //1秒で透明になる
-            image.color -= new Color(0, 0, 0, 1 * Time.deltaTime);
+            if (Time.deltaTime > 0f)
+            {
+                image.color -= new Color(0, 0, 0, 1 * Time.deltaTime);
+            }
+            else
+            {
+                image.color -= new Color(0, 0, 0, 1 * Time.unscaledDeltaTime);
+            }
         }
     }
 

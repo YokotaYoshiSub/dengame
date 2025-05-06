@@ -5,8 +5,13 @@ using System.Collections.Generic;
 
 public class EventPanelManager : MonoBehaviour
 {
+    //保留
     public bool isOnEvent;
     public Sprite image1;
+
+    [SerializeField, Multiline(1)]
+    string text0;
+    public bool goOnClick1;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -26,5 +31,13 @@ public class EventPanelManager : MonoBehaviour
     {
         //テキストイベントの進行に合わせて表示画像を切り替えていく
         //Debug.Log(GameManager.eventProgress);
+
+        if (goOnClick1)
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+
+            }
+        }
     }
 }

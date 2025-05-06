@@ -105,21 +105,22 @@ public class EventController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //--------------------------方向転換できるもの------------------------
         if (canRotate)
         {
             //自分から見たプレイヤーの位置
             playerPosition = new Vector2(player.transform.position.x - transform.position.x, 
             player.transform.position.y - transform.position.y);
 
-            if (playerPosition.y <= playerPosition.x && playerPosition.y <= -playerPosition.x)
+            if (playerPosition.y * 1.1f <= playerPosition.x && playerPosition.y * 1.1f <= -playerPosition.x)
             {
                 spriteRenderer.sprite = downImage;//下向きの画像を代入
             }
-            else if (playerPosition.y <= playerPosition.x && playerPosition.y > -playerPosition.x)
+            else if (playerPosition.y * 1.1f <= playerPosition.x && playerPosition.y * 1.1f > -playerPosition.x)
             {
                 spriteRenderer.sprite = rightImage;//右向きの画像を代入
             }
-            else if (playerPosition.y > playerPosition.x && playerPosition.y <= -playerPosition.x)
+            else if (playerPosition.y * 1.1f > playerPosition.x && playerPosition.y * 1.1f <= -playerPosition.x)
             {
                 spriteRenderer.sprite = leftImage;//左向きの画像を代入
             }
@@ -128,12 +129,15 @@ public class EventController : MonoBehaviour
                 spriteRenderer.sprite = upImage;//上向きの画像を代入
             }
         }
+
+
         /*
         if (isTextChange)
         {
             Debug.Log(eventProgressChange);
         }
         */
+        //--------------------------テキストが変化するもの-----------------------
         if (isTextChange && GameManager.eventProgress >= eventProgressJunction)
         {
             eventChange = true;//イベント切り替え
