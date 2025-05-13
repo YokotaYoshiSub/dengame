@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1902
     height: 971
   m_ShowMode: 4
-  m_Title: Hierarchy
+  m_Title: Inspector
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
@@ -99,7 +99,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 0
-  controlID: 27
+  controlID: 97
   draggingID: 0
 --- !u!114 &5
 MonoBehaviour:
@@ -430,7 +430,7 @@ MonoBehaviour:
     m_OverlaysVisible: 1
   m_LockTracker:
     m_IsLocked: 0
-  m_LastSelectedObjectID: -3452
+  m_LastSelectedObjectID: 38898
 --- !u!114 &14
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -474,7 +474,7 @@ MonoBehaviour:
     m_ControlHash: -371814159
     m_PrefName: Preview_InspectorPreview
   m_LastInspectedObjectInstanceID: -1
-  m_LastVerticalScrollValue: 0
+  m_LastVerticalScrollValue: 72
   m_GlobalObjectId: 
   m_InspectorMode: 0
   m_LockTracker:
@@ -527,7 +527,7 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Prefabs
+    - Assets/Scenes
     m_Globs: []
     m_ProductIds: 
     m_AnyWithAssetOrigin: 0
@@ -537,16 +537,16 @@ MonoBehaviour:
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Prefabs
+  - Assets/Scenes
   m_LastFoldersGridSize: -1
   m_LastProjectPath: C:\Unity\dengame\AlloyLaboratory
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 7c930000
-    m_LastClickedID: 37756
-    m_ExpandedIDs: 000000001c930000
+    m_SelectedIDs: 3c920000
+    m_LastClickedID: 37436
+    m_ExpandedIDs: 00000000d4910000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -575,7 +575,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000001c930000
+    m_ExpandedIDs: 00000000d4910000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -604,7 +604,7 @@ MonoBehaviour:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
-    m_ExpandedInstanceIDs: c62300008c6c00002a6c0000ae8a0000b28a0000b68a0000de8a0000068b0000028b00000e8b00003c8a0000588a0000548a00009a8a0000fe8a0000ba890000d6890000a08a0000fa8a0000c48a0000c88a0000c08a0000bc8a0000f28a0000768b0000f4890000468b00004a8b0000908b0000ee8b0000209000004a90000046900000a6900000b4b10000dcab000020ac000044ac00003c930000da93000058930000ba910000e6c60000bcc70000
+    m_ExpandedInstanceIDs: c62300008c6c00002a6c0000ae8a0000b28a0000b68a0000de8a0000068b0000028b00000e8b00003c8a0000588a0000548a00009a8a0000fe8a0000ba890000d6890000a08a0000fa8a0000c48a0000c88a0000c08a0000bc8a0000f28a0000768b0000f4890000468b00004a8b0000908b0000ee8b0000209000004a90000046900000a6900000b4b10000dcab000020ac000044ac00003c930000da93000058930000ba910000e6c60000bcc70000829400003a980000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1064,7 +1064,7 @@ MonoBehaviour:
       sizeOverridden: 0
     - dockPosition: 1
       containerId: overlay-container--right
-      displayed: 1
+      displayed: 0
       id: Scene View/Tilemap Focus
       index: 2
       contents: '{"m_Layout":4,"m_Collapsed":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":48.0,"y":48.0},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":0,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
@@ -1299,9 +1299,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: -0.6177117, y: -0.027523872, z: 2.8638914}
+    m_Target: {x: -2.1622832, y: 0.6075115, z: 2.8326526}
     speed: 2
-    m_Value: {x: -0.6177117, y: -0.027523872, z: 2.8638914}
+    m_Value: {x: -2.1622832, y: 0.6075115, z: 2.8326526}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1351,9 +1351,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 7.714913
+    m_Target: 10.838756
     speed: 2
-    m_Value: 7.714913
+    m_Value: 10.838756
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -1428,7 +1428,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: d2f9ffff0cfbffff
+      m_ExpandedIDs: a6ecfffffaf2ffff6cf3ffff28f5fffffef6ffff90f8ffff62f9ffff0cfbffff82920000d8970000f297000006980000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 

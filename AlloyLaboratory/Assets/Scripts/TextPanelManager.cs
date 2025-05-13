@@ -6,6 +6,7 @@ public class TextPanelManager : MonoBehaviour
 {
     //テキストの管理はなるべくこっちでやりたい
     public bool isEventOnly = false;//イベントだけのシーンかどうか
+    public bool isTextLoop = true;//テキストを　ループさせるかどうか
     GameObject player;//プレイヤー
     PlayerController playerCnt;//プレイヤーコントローラー
     GameObject playerFocus;//プレイヤーの目線
@@ -23,23 +24,32 @@ public class TextPanelManager : MonoBehaviour
     //テキスト
     string[] people;
     string[] texts;
+    bool[] willPopUp;
     public int textNum;
     [SerializeField]
     string person0;
     [SerializeField]
     string text0;
     [SerializeField]
+    bool willPopUp0;
+    [SerializeField]
     string person1;
     [SerializeField]
     string text1;
+    [SerializeField]
+    bool willPopUp1;
     [SerializeField]
     string person2;
     [SerializeField]
     string text2;
     [SerializeField]
+    bool willPopUp2;
+    [SerializeField]
     string person3;
     [SerializeField]
     string text3;
+    [SerializeField]
+    bool willPopUp3;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -58,17 +68,21 @@ public class TextPanelManager : MonoBehaviour
         
         if (isEventOnly)
         {
+            
             isTextDisplaying = true;
             people = new string[textNum];
             texts = new string[textNum];
+            willPopUp = new bool[textNum];
 
             string[] maxPeople = {person0, person1, person2, person3};
             string[] maxTexts = {text0, text1, text2, text3};
+            bool[] maxWillPopUp = {willPopUp0, willPopUp1, willPopUp2, willPopUp3};
 
             for (int i = 0; i < textNum; i++)
             {
                 people[i] = maxPeople[i];
                 texts[i] = maxTexts[i];
+                willPopUp[i] = maxWillPopUp[i];
             }
 
             gameObject.SetActive(false);
@@ -82,13 +96,25 @@ public class TextPanelManager : MonoBehaviour
 
         //Debug.Log(chatNum);
 
+        
         if (isEventOnly)
         {
             //イベントだけのばあい
-            nameText.GetComponent<Text>().text = people[chatNum];
-            if (!isTextComposing)
+            if (textNum > chatNum)
             {
-                StartCoroutine(TextFlow(texts[chatNum]));
+                nameText.GetComponent<Text>().text = people[chatNum];
+                if (!isTextComposing)
+                {
+                    if (willPopUp[chatNum])
+                    {
+                        //ポップアップさせるテキストなら
+                        StartCoroutine(TextPopUp(texts[chatNum]));
+                    }
+                    else
+                    {
+                        StartCoroutine(TextFlow(texts[chatNum]));
+                    }
+                }
             }
         }
         else
@@ -103,11 +129,10 @@ public class TextPanelManager : MonoBehaviour
                 }
             }
         }
-
         
     }
 
-    //-----------------------テキスト送りコルーチン
+    //-----------------------テキスト送りコルーチン-------------------
     IEnumerator TextFlow(string text)
     {
         //0.02sにつき1文字ずつ表示させたい
@@ -161,7 +186,102 @@ public class TextPanelManager : MonoBehaviour
                 if (chatNum >= textNum)
                 {
                     //今のが最後のテキストだったら破壊
-                    chatNum = 0;
+                    if (isTextLoop)
+                    {
+                        //次もテキストを表示する
+                        chatNum = 0;
+                        Time.timeScale = 1;
+                        isTextDisplaying = false;
+                        if (playerFocus != null)
+                        {
+                            GameManager.eventProgress += playerFocusCS.eventProgressGetPoint;//ものによってはイベント進行
+                        }
+                        gameObject.SetActive(false);
+                    }
+                    else
+                    {
+                        chatNum += 1;
+                        isTextDisplaying = false;
+                    }
+                    /*
+                    Time.timeScale = 1;
+                    isTextDisplaying = false;
+                    if (playerFocus != null)
+                    {
+                        GameManager.eventProgress += playerFocusCS.eventProgressGetPoint;//ものによってはイベント進行
+                    }
+                    gameObject.SetActive(false);
+                    */
+                }
+                yield break;
+            }
+        }
+    }
+
+    //-----------------------------テキストポップアップコルーチン-------------------
+    IEnumerator TextPopUp(string text)
+    {
+        isTextComposing = true;
+        float textPoppingUpTime = 0f;
+        
+        chatText.GetComponent<Text>().text = text;//テキスト表示
+        Vector2 textStartPosition = chatText.transform.position;//テキストの初期位置
+
+        //ポジションに代入するようの値
+        float vivX = 0f;
+        float vivY = 0f;
+
+        //文字の大きさの倍率
+        float scale = 1f;
+
+        while (true)
+        {
+            textPoppingUpTime += Time.unscaledDeltaTime;
+
+            //表示したテキストを揺らしたい sin
+            //少しずつ減衰させる exp
+            //一瞬だけ文字を大きくしたり 
+
+            vivY = Mathf.Sin(15f * textPoppingUpTime * Mathf.PI) * Mathf.Exp(-8f * textPoppingUpTime);
+            vivX = Mathf.Sin(5f * textPoppingUpTime * Mathf.PI) * Mathf.Exp(-4f * textPoppingUpTime);
+
+            scale = 2f - Mathf.Exp(textPoppingUpTime - 1f);
+
+            chatText.transform.localScale = new Vector2(1f, 1f);
+            chatText.transform.position = new Vector2(0f, textStartPosition.y + vivY);
+
+            yield return null;
+
+            if (textPoppingUpTime >= 1f)
+            {
+                //文字を静止させる
+                chatText.transform.localScale = new Vector2(1f, 1f);
+                chatText.transform.position = textStartPosition;
+                break;
+            }
+        }
+
+        while (true)
+        {
+            yield return null;
+
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                //次のテキストを生成する準備
+                chatNum += 1;
+                isTextComposing = false;
+                if (chatNum >= textNum)
+                {
+                    //今のが最後のテキストだったら破壊
+                    if (isTextLoop)
+                    {
+                        //次もテキストを表示する
+                        chatNum = 0;
+                    }
+                    else
+                    {
+                        chatNum += 1;
+                    }
                     Time.timeScale = 1;
                     isTextDisplaying = false;
                     if (playerFocus != null)

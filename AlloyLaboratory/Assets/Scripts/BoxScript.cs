@@ -1,16 +1,19 @@
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-public class PlayerController : MonoBehaviour
-{   
-    //操作キャラクターの動きに関する部分を主に担当する
-
-    private Rigidbody2D rb2d;
-    public float speed = 5.0f;//歩きスピード
-    float axisH = 0.0f;//左右入力離散値
-    float axisV = 0.0f;//上下入力離散値
+public class BoxScript : MonoBehaviour
+{
+    //倉庫番の箱のように、押すことができる
+    GameObject player;
+    PlayerController playerCnt;
+    float speed;//箱を押すスピード
+    Vector2 playerPosition;
+    Rigidbody2D rb2d;
+    float axisH;
+    float axisV;
     Vector2 inputVector;//入力方向
+    Vector2 checkVector;
     float preAxisH = 0.0f;//axisHの一時保存
     float preAxisV = 0.0f;//axisVの一時保存
 
@@ -21,55 +24,25 @@ public class PlayerController : MonoBehaviour
     bool isUp = false;//上方向コルーチン開始フラグ
     bool isDown = false;//下方向コルーチン開始フラグ
 
-    //-------------------------HP関連------------------------
-    public int maxHp = 3;//最大hp
-    public static int hp = 3;//hp
-    //GameObject enemy;
-
-    //------------------------カメラ関係-----------------------
-    GameObject mainCamera;
-    CameraController cameraCnt;
-    //---------------------イベント関係-----------------------
-    
-    //public bool onEvent = false;//イベント状態かどうか。できればPlayerFocusのほうにまとめたい
-
-    //public static bool eventOnStart;
-
-    // Start is called before the first frame update
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rb2d = GetComponent<Rigidbody2D>();//Rigidbody2Dの取得
-        //enemy = GameObject.FindGameObjectWithTag("Damage1");
-        hp = maxHp;
-        mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
-        cameraCnt = mainCamera.GetComponent<CameraController>();
-
+        player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            playerCnt = player.GetComponent<PlayerController>();
+        }
+        rb2d = GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
-
     void Update()
     {
-        //Debug.Log(new Vector2(axisH, axisV));
-        //Debug.Log(onEvent);
-        
+        //こっちから見たプレイヤーの位置
+        playerPosition = new Vector2(player.transform.position.x - transform.position.x,
+        player.transform.position.y - transform.position.y);
 
-        if (hp <= 0)
-        {
-            //hpが0なら入力を受け付けない
-            return;
-        }
         
-        //左シフトでダッシュ状態
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            speed = 10.0f;
-        }
-        //ダッシュ解除
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            speed = 5.0f;
-        }
 
         //ベクトル(axisH, axisV)は(0,0),(+-1,0),(0,+-1)のいずれかである
         if (axisV == 0)
@@ -80,8 +53,24 @@ public class PlayerController : MonoBehaviour
         {
             axisV = Input.GetAxisRaw("Vertical");
         }
+
         inputVector = new Vector2(axisH, axisV);//入力ベクトル
+
+        //プレイヤーの位置に入力ベクトルを足す。これがほぼ0なら箱を押していることになる
+
+        checkVector = new Vector2(playerPosition.x + inputVector.x, playerPosition.y + inputVector.y);
+
+        if (checkVector.magnitude <= 0.1f || isCoroutineWorking)
+        {
+            speed = playerCnt.speed;
+        }
+        else
+        {
+            speed = 0f;
+        }
         //Debug.Log(inputVector);
+
+        
 
         //入力が1,-1から変更されたらコルーチン開始フラグオン
         if (preAxisH != 0 && preAxisH != axisH)
@@ -135,13 +124,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        
-        if (hp <= 0)
-        {
-            //hpが0なら入力を受け付けない
-            return;
-        }
-
         if (isRight)
         {
             //右移動フラグオンなら
@@ -154,12 +136,12 @@ public class PlayerController : MonoBehaviour
         }
         else if (isUp)
         {
-            //左移動フラグオンなら
+            //上移動フラグオンなら
             StartCoroutine(Move(0.0f, 1.0f));
         }
         else if (isDown)
         {
-            //左移動フラグオンなら
+            //下移動フラグオンなら
             StartCoroutine(Move(0.0f, -1.0f));
         }
 
@@ -233,7 +215,6 @@ public class PlayerController : MonoBehaviour
             {
                 break;
             }
-            
             //distanceの値がおかしくなった時用
             //場所がほぼ格子点上ならそこで止める
             if (new Vector2(transform.position.x - Mathf.Round(transform.position.x), 
@@ -253,103 +234,4 @@ public class PlayerController : MonoBehaviour
         isMoving = false;
         isCoroutineWorking = false;
     }
-
-    //---------------------------------------------被弾モーション-----------------------------------------------------
-    private IEnumerator HitByEnemy(Collision2D collision)
-    {
-
-        //一瞬入力を受け付けない時間を設ける
-        isMoving = true;
-        isCoroutineWorking = true;
-
-        float time = 0;//吹っ飛ばされてからの時間
-        float blownTime = 0.4f;//吹っ飛ばされる時間
-        float blownSpeed;//吹っ飛ばされる速さ
-
-        //敵の方向と反対方向に1吹き飛ばす
-        //吹っ飛ばす方向の正規ベクトル
-        Vector2 blownDirection = new Vector2((transform.position.x - collision.transform.position.x),(transform.position.y - collision.transform.position.y)).normalized;
-        //吹っ飛ばされる先はもっとも近い格子点
-        Vector2 blownGoal = new Vector2(Mathf.Round(transform.position.x + blownDirection.x), Mathf.Round(transform.position.y + blownDirection.y));
-        //吹っ飛ばされる強さ
-        //吹っ飛ばされる先までの距離に比例
-        float blownForce = new Vector2(blownGoal.x - transform.position.x, blownGoal.y - transform.position.y).magnitude * 60f;
-
-        //Debug.Log(blownForce);
-        //Debug.Log(blownDirection);
-
-        while(time <= blownTime)
-        {
-            //吹っ飛ばされているときの速さを更新
-            blownSpeed = (blownTime - time)*blownForce;
-            rb2d.linearVelocity = new Vector2((blownGoal.x - transform.position.x) * blownSpeed, (blownGoal.y - transform.position.y) * blownSpeed);
-            time += Time.deltaTime;
-            yield return null;
-        }
-        
-        //格子点に移動
-        transform.position = new Vector2(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y));
-
-        //最終的にまた入力を受け付け、移動できるようにする
-        isMoving = false;
-        isCoroutineWorking = false;
-    }
-
-    //-------------------------------------------やられモーション---------------------------------------------
-    IEnumerator Dead()
-    {
-        //アニメーションを流す
-        //血を飛び散らせる
-        //入力を拒否する
-        rb2d.linearVelocity = Vector2.zero;//いったんその場で停止
-        yield return null;
-    }
-
-    void OnCollisionEnter2D(Collision2D collision)
-    {
-        //---------------------------------------------敵と接触----------------------------------------------------
-        if (collision.gameObject.tag == "Damage1")
-        {
-            //敵に接触した時の処理
-            hp -= 1;
-            cameraCnt.Vib();
-            
-            
-            //体力が残っていたら敵と反対方向に弾き飛ばされる
-            if (hp > 0)
-            {
-                StartCoroutine(HitByEnemy(collision));
-            }
-            else
-            {
-                StartCoroutine(Dead());
-            }
-        }
-        if (collision.gameObject.tag == "Damage2")
-        {
-            //敵に接触した時の処理
-            hp -= 2;
-            
-            //体力が残っていたら敵と反対方向に弾き飛ばされる
-            if (hp > 0)
-            {
-                StartCoroutine(HitByEnemy(collision));
-            }
-            else
-            {
-                StartCoroutine(Dead());
-            }
-        }
-        if (collision.gameObject.tag == "Damage3")
-        {
-            //即死
-            hp -= 3;
-            StartCoroutine(Dead());
-            
-        }
-    }
-
-    
 }
-    
-    

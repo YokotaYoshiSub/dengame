@@ -383,12 +383,12 @@ MonoBehaviour:
   nameText: {fileID: 1432692159}
   chatText: {fileID: 1900626209}
   isTextDisplaying: 1
-  textNum: 2
+  textNum: 1
   person0: ???
-  text0: ~~~~~~~~~~
-  willPopUp0: 0
-  person1: ???
-  text1: "\u30EA\u30FB\u30FB\u30FB\u3055\u30FB\u30FB\u30FB\u671D\u30FB\u30FB\u30FB\u3059\u30FB\u30FB\u30FB"
+  text0: "\u30EA\u30CE\uFF01\uFF01\uFF01"
+  willPopUp0: 1
+  person1: 
+  text1: 
   willPopUp1: 0
   person2: 
   text2: 
@@ -667,10 +667,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3f57e5f50201b478358c31b551b5c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isFastLoad: 0
+  isFastLoad: 1
   textPanel: {fileID: 913620773}
   blackCurtain: {fileID: 537736826}
-  nextScene: EventScene3
+  nextScene: RinoRoom
 --- !u!1 &1574165906
 GameObject:
   m_ObjectHideFlags: 0

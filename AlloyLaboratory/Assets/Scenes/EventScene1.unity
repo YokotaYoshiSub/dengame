@@ -377,6 +377,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isEventOnly: 1
+  isTextLoop: 0
   speakerIcon: {fileID: 0}
   textBox: {fileID: 1657545734}
   nameText: {fileID: 1432692159}
@@ -385,12 +386,16 @@ MonoBehaviour:
   textNum: 1
   person0: ???
   text0: "\u307E\u305F\u6765\u30FB\u30FB\u30FB\u305E\uFF01\u907F\u3051\u30FB\u30FB\u30FB"
+  willPopUp0: 0
   person1: 
   text1: 
+  willPopUp1: 0
   person2: 
   text2: 
+  willPopUp2: 0
   person3: 
   text3: 
+  willPopUp3: 0
 --- !u!1 &1432692159
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,6 +667,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c3f57e5f50201b478358c31b551b5c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isFastLoad: 0
   textPanel: {fileID: 913620773}
   blackCurtain: {fileID: 537736826}
   nextScene: EventScene2

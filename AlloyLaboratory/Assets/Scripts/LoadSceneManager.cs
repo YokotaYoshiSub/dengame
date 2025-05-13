@@ -5,7 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class LoadSceneManager : MonoBehaviour
 {
-    BlackCurtainManager blackCurtain;
+    GameObject blackCurtain;
+    BlackCurtainManager blackCurtainManager;
     public string sceneName;//移動先のシーン名
     public bool eventOnStart;//移動先でイベントから入るかどうか
     GameObject playerFocus;
@@ -54,8 +55,12 @@ public class LoadSceneManager : MonoBehaviour
         }
         
         //暗転用のスクリプトを取得
-        blackCurtain = 
-        GameObject.FindGameObjectWithTag("BlackCurtain").GetComponent<BlackCurtainManager>();
+        blackCurtain = GameObject.FindGameObjectWithTag("BlackCurtain");
+        if (blackCurtain != null)
+        {
+            blackCurtainManager = blackCurtain.GetComponent<BlackCurtainManager>();
+        }
+        
 
         //texts配列、people配列を初期化
         texts = new string[textNum];
@@ -109,7 +114,7 @@ public class LoadSceneManager : MonoBehaviour
                 playerFocusCS.people =  null;
             }
             
-            StartCoroutine(blackCurtain.FadeIn());
+            StartCoroutine(blackCurtainManager.FadeIn());
             Invoke("LoadScene", 1f);
         }
     }

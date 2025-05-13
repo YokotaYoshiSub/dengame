@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(eventProgress);
+        //Debug.Log(eventProgress);
 
         /*
         if (playerCnt.onEvent == true)

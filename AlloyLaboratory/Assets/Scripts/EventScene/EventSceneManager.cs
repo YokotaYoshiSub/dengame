@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class EventSceneManager : MonoBehaviour
 {
-
+    public bool isFastLoad;
     //イベント専用シーン
     public GameObject textPanel;
     TextPanelManager textPanelManager;
@@ -44,12 +44,21 @@ public class EventSceneManager : MonoBehaviour
     IEnumerator LoadSceneReady()
     {
         isLoading = true;
-        StartCoroutine(blackCurtainManager.FadeIn());
+
+        if (!isFastLoad)
+        {
+            StartCoroutine(blackCurtainManager.FadeIn());
+        }
+        
         float time = 0f;
         while (true)
         {
             time += Time.deltaTime;
             yield return null;
+            if (isFastLoad)
+            {
+                break;
+            }
             if (time >= 1f)
             {
                 break;
